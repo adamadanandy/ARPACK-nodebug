@@ -35,7 +35,7 @@ include ../ARmake.inc
 #  The library also contains all extra BLAS routines used by driver
 #  programs in the EXAMPLES directory.
 #
-#  The name of the library is defined by $(LAPACKLIB) in
+#  The name of the library is defined by $(ARPACKLIB) in
 #  ../ARmake.inc and is created at the next higher directory level.
 #
 #
@@ -93,39 +93,39 @@ ZDRVOBJ = zgbtrf.o zgbtrs.o zgbtf2.o zgttrf.o zgttrs.o zlaswp.o zlacgv.o
 all: single double complex complex16 sdrv ddrv cdrv zdrv
  
 single: $(SOBJ) $(IOBJ)
-	$(AR) $(ARFLAGS) $(LAPACKLIB) $(SOBJ) $(IOBJ)
-	$(RANLIB) $(LAPACKLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(SOBJ) $(IOBJ)
+	$(RANLIB) $(ARPACKLIB)
  
 double: $(DOBJ) $(IOBJ)
-	$(AR) $(ARFLAGS) $(LAPACKLIB) $(DOBJ) $(IOBJ)
-	$(RANLIB) $(LAPACKLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(DOBJ) $(IOBJ)
+	$(RANLIB) $(ARPACKLIB)
 
 complex: $(COBJ) $(CIOBJ) $(IOBJ)
-	$(AR) $(ARFLAGS) $(LAPACKLIB) $(COBJ) $(CIOBJ) $(IOBJ)
-	$(RANLIB) $(LAPACKLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(COBJ) $(CIOBJ) $(IOBJ)
+	$(RANLIB) $(ARPACKLIB)
 
 complex16: $(ZOBJ) $(ZIOBJ) $(IOBJ)
-	$(AR) $(ARFLAGS) $(LAPACKLIB) $(ZOBJ) $(ZIOBJ) $(IOBJ)
-	$(RANLIB) $(LAPACKLIB) 
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(ZOBJ) $(ZIOBJ) $(IOBJ)
+	$(RANLIB) $(ARPACKLIB) 
 #
 # Add routines needed by driver programs (in the EXAMPLES
-# directory) to $(LAPACKLIB).
+# directory) to $(ARPACKLIB).
 #
 sdrv: $(SDRVOBJ) $(CDRVOBJ)
-	$(AR) $(ARFLAGS) $(LAPACKLIB) $(SDRVOBJ) $(CDRVOBJ)
-	$(RANLIB) $(LAPACKLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(SDRVOBJ) $(CDRVOBJ)
+	$(RANLIB) $(ARPACKLIB)
 
 ddrv: $(DDRVOBJ) $(ZDRVOBJ)
-	$(AR) $(ARFLAGS) $(LAPACKLIB) $(DDRVOBJ) $(ZDRVOBJ)
-	$(RANLIB) $(LAPACKLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(DDRVOBJ) $(ZDRVOBJ)
+	$(RANLIB) $(ARPACKLIB)
 
 cdrv: $(CDRVOBJ)
-	$(AR) $(ARFLAGS) $(LAPACKLIB) $(CDRVOBJ)
-	$(RANLIB) $(LAPACKLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(CDRVOBJ)
+	$(RANLIB) $(ARPACKLIB)
 
 zdrv: $(ZDRVOBJ)
-	$(AR) $(ARFLAGS) $(LAPACKLIB) $(ZDRVOBJ)
-	$(RANLIB) $(LAPACKLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(ZDRVOBJ)
+	$(RANLIB) $(ARPACKLIB)
 
 #  clean	- remove all object files
 #

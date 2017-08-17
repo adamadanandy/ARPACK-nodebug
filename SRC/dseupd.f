@@ -226,8 +226,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+c      include   'debug.h'
+c      include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -300,7 +300,7 @@ c     %------------------------%
 c     | Set default parameters |
 c     %------------------------%
 c
-      msglvl = mseupd
+c      msglvl = mseupd
       mode = iparam(7)
       nconv = iparam(5)
       info = 0
@@ -444,12 +444,12 @@ c
          bnorm2 = dnrm2 (n, workd, 1)
       end if
 c
-      if (msglvl .gt. 2) then
-         call dvout (logfil, ncv, workl(irz), ndigit,
-     &   '_seupd: Ritz values passed in from _SAUPD.')
-         call dvout (logfil, ncv, workl(ibd), ndigit,
-     &   '_seupd: Ritz estimates passed in from _SAUPD.')
-      end if
+c      if (msglvl .gt. 2) then
+c         call dvout (logfil, ncv, workl(irz), ndigit,
+c     &   '_seupd: Ritz values passed in from _SAUPD.')
+c         call dvout (logfil, ncv, workl(ibd), ndigit,
+c     &   '_seupd: Ritz estimates passed in from _SAUPD.')
+c      end if
 c
       if (rvec) then
 c
@@ -481,12 +481,12 @@ c
      &                np    , workl(irz)  , workl(bounds),
      &                workl)
 c
-         if (msglvl .gt. 2) then
-            call dvout (logfil, ncv, workl(irz), ndigit,
-     &      '_seupd: Ritz values after calling _SGETS.')
-            call dvout (logfil, ncv, workl(bounds), ndigit,
-     &      '_seupd: Ritz value indices after calling _SGETS.')
-         end if
+c         if (msglvl .gt. 2) then
+c            call dvout (logfil, ncv, workl(irz), ndigit,
+c     &      '_seupd: Ritz values after calling _SGETS.')
+c            call dvout (logfil, ncv, workl(bounds), ndigit,
+c     &      '_seupd: Ritz value indices after calling _SGETS.')
+c         end if
 c
 c        %-----------------------------------------------------%
 c        | Record indices of the converged wanted Ritz values  |
@@ -512,12 +512,12 @@ c        | are different then there has probably been an error       |
 c        | caused by incorrect passing of the _saupd data.           |
 c        %-----------------------------------------------------------%
 c
-         if (msglvl .gt. 2) then
-             call ivout(logfil, 1, numcnv, ndigit,
-     &            '_seupd: Number of specified eigenvalues')
-             call ivout(logfil, 1, nconv, ndigit,
-     &            '_seupd: Number of "converged" eigenvalues')
-         end if
+c         if (msglvl .gt. 2) then
+c             call ivout(logfil, 1, numcnv, ndigit,
+c     &            '_seupd: Number of specified eigenvalues')
+c             call ivout(logfil, 1, nconv, ndigit,
+c     &            '_seupd: Number of "converged" eigenvalues')
+c         end if
 c
          if (numcnv .ne. nconv) then
             info = -17
@@ -541,13 +541,13 @@ c
             go to 9000
          end if
 c
-         if (msglvl .gt. 1) then
-            call dcopy (ncv, workl(iq+ncv-1), ldq, workl(iw), 1)
-            call dvout (logfil, ncv, workl(ihd), ndigit,
-     &          '_seupd: NCV Ritz values of the final H matrix')
-            call dvout (logfil, ncv, workl(iw), ndigit,
-     &           '_seupd: last row of the eigenvector matrix for H')
-         end if
+c         if (msglvl .gt. 1) then
+c            call dcopy (ncv, workl(iq+ncv-1), ldq, workl(iw), 1)
+c            call dvout (logfil, ncv, workl(ihd), ndigit,
+c     &          '_seupd: NCV Ritz values of the final H matrix')
+c            call dvout (logfil, ncv, workl(iw), ndigit,
+c     &           '_seupd: last row of the eigenvector matrix for H')
+c         end if
 c
          if (reord) then
 c
@@ -611,10 +611,10 @@ c
 c
  30      end if
 c
-         if (msglvl .gt. 2) then
-             call dvout  (logfil, ncv, workl(ihd), ndigit,
-     &       '_seupd: The eigenvalues of H--reordered')
-         end if
+c         if (msglvl .gt. 2) then
+c             call dvout  (logfil, ncv, workl(ihd), ndigit,
+c     &       '_seupd: The eigenvalues of H--reordered')
+c         end if
 c
 c        %----------------------------------------%
 c        | Load the converged Ritz values into D. |
@@ -809,17 +809,17 @@ c
 c
       end if
 c
-      if (type .ne. 'REGULR' .and. msglvl .gt. 1) then
-         call dvout (logfil, nconv, d, ndigit,
-     &          '_seupd: Untransformed converged Ritz values')
-         call dvout (logfil, nconv, workl(ihb), ndigit, 
-     &     '_seupd: Ritz estimates of the untransformed Ritz values')
-      else if (msglvl .gt. 1) then
-         call dvout (logfil, nconv, d, ndigit,
-     &          '_seupd: Converged Ritz values')
-         call dvout (logfil, nconv, workl(ihb), ndigit, 
-     &     '_seupd: Associated Ritz estimates')
-      end if
+c      if (type .ne. 'REGULR' .and. msglvl .gt. 1) then
+c         call dvout (logfil, nconv, d, ndigit,
+c     &          '_seupd: Untransformed converged Ritz values')
+c         call dvout (logfil, nconv, workl(ihb), ndigit, 
+c     &     '_seupd: Ritz estimates of the untransformed Ritz values')
+c      else if (msglvl .gt. 1) then
+c         call dvout (logfil, nconv, d, ndigit,
+c     &          '_seupd: Converged Ritz values')
+c         call dvout (logfil, nconv, workl(ihb), ndigit, 
+c     &     '_seupd: Associated Ritz estimates')
+c      end if
 c 
 c     %-------------------------------------------------%
 c     | Ritz vector purification step. Formally perform |

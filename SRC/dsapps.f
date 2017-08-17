@@ -135,8 +135,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+c      include   'debug.h'
+c      include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -213,8 +213,8 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 c
-      call second (t0)
-      msglvl = msapps
+c      call second (t0)
+c      msglvl = msapps
 c 
       kplusp = kev + np 
 c 
@@ -260,14 +260,14 @@ c
          do 30 i = istart, kplusp-1
             big   = abs(h(i,2)) + abs(h(i+1,2))
             if (h(i+1,1) .le. epsmch*big) then
-               if (msglvl .gt. 0) then
-                  call ivout (logfil, 1, i, ndigit, 
-     &                 '_sapps: deflation at row/column no.')
-                  call ivout (logfil, 1, jj, ndigit, 
-     &                 '_sapps: occured before shift number.')
-                  call dvout (logfil, 1, h(i+1,1), ndigit, 
-     &                 '_sapps: the corresponding off diagonal element')
-               end if
+c               if (msglvl .gt. 0) then
+c                  call ivout (logfil, 1, i, ndigit, 
+c     &                 '_sapps: deflation at row/column no.')
+c                  call ivout (logfil, 1, jj, ndigit, 
+c     &                 '_sapps: occured before shift number.')
+c                  call dvout (logfil, 1, h(i+1,1), ndigit, 
+c     &                 '_sapps: the corresponding off diagonal element')
+c               end if
                h(i+1,1) = zero
                iend = i
                go to 40
@@ -431,12 +431,12 @@ c
       do 100 i = itop, kplusp-1
          big   = abs(h(i,2)) + abs(h(i+1,2))
          if (h(i+1,1) .le. epsmch*big) then
-            if (msglvl .gt. 0) then
-               call ivout (logfil, 1, i, ndigit, 
-     &              '_sapps: deflation at row/column no.')
-               call dvout (logfil, 1, h(i+1,1), ndigit, 
-     &              '_sapps: the corresponding off diagonal element')
-            end if
+c            if (msglvl .gt. 0) then
+c               call ivout (logfil, 1, i, ndigit, 
+c     &              '_sapps: deflation at row/column no.')
+c               call dvout (logfil, 1, h(i+1,1), ndigit, 
+c     &              '_sapps: the corresponding off diagonal element')
+c            end if
             h(i+1,1) = zero
          end if
  100  continue
@@ -490,21 +490,21 @@ c
       if (h(kev+1,1) .gt. zero) 
      &   call daxpy (n, h(kev+1,1), v(1,kev+1), 1, resid, 1)
 c
-      if (msglvl .gt. 1) then
-         call dvout (logfil, 1, q(kplusp,kev), ndigit, 
-     &      '_sapps: sigmak of the updated residual vector')
-         call dvout (logfil, 1, h(kev+1,1), ndigit, 
-     &      '_sapps: betak of the updated residual vector')
-         call dvout (logfil, kev, h(1,2), ndigit, 
-     &      '_sapps: updated main diagonal of H for next iteration')
-         if (kev .gt. 1) then
-         call dvout (logfil, kev-1, h(2,1), ndigit, 
-     &      '_sapps: updated sub diagonal of H for next iteration')
-         end if
-      end if
+c      if (msglvl .gt. 1) then
+c         call dvout (logfil, 1, q(kplusp,kev), ndigit, 
+c     &      '_sapps: sigmak of the updated residual vector')
+c         call dvout (logfil, 1, h(kev+1,1), ndigit, 
+c     &      '_sapps: betak of the updated residual vector')
+c         call dvout (logfil, kev, h(1,2), ndigit, 
+c     &      '_sapps: updated main diagonal of H for next iteration')
+c         if (kev .gt. 1) then
+c         call dvout (logfil, kev-1, h(2,1), ndigit, 
+c     &      '_sapps: updated sub diagonal of H for next iteration')
+c         end if
+c      end if
 c
-      call second (t1)
-      tsapps = tsapps + (t1 - t0)
+c      call second (t1)
+c      tsapps = tsapps + (t1 - t0)
 c 
  9000 continue 
       return

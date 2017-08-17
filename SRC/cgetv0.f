@@ -120,8 +120,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+c      include   'debug.h'
+c      include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -211,8 +211,8 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 c
-         call second (t0)
-         msglvl = mgetv0
+c         call second (t0)
+c         msglvl = mgetv0
 c 
          ierr   = 0
          iter   = 0
@@ -328,7 +328,7 @@ c     %----------------------------------------------------------%
 c     | Compute the B-norm of the orthogonalized starting vector |
 c     %----------------------------------------------------------%
 c
-      call second (t2)
+c      call second (t2)
       if (bmat .eq. 'G') then
          nbx = nbx + 1
          call ccopy (n, resid, 1, workd(n+1), 1)
@@ -342,10 +342,10 @@ c
 c 
    40 continue
 c
-      if (bmat .eq. 'G') then
-         call second (t3)
-         tmvbx = tmvbx + (t3 - t2)
-      end if
+c      if (bmat .eq. 'G') then
+c         call second (t3)
+c         tmvbx = tmvbx + (t3 - t2)
+c      end if
 c 
       if (bmat .eq. 'G') then
          cnorm = cdotc (n, resid, 1, workd, 1)
@@ -358,12 +358,12 @@ c     %--------------------------------------%
 c     | Check for further orthogonalization. |
 c     %--------------------------------------%
 c
-      if (msglvl .gt. 2) then
-          call svout (logfil, 1, rnorm0, ndigit, 
-     &                '_getv0: re-orthonalization ; rnorm0 is')
-          call svout (logfil, 1, rnorm, ndigit, 
-     &                '_getv0: re-orthonalization ; rnorm is')
-      end if
+c      if (msglvl .gt. 2) then
+c          call svout (logfil, 1, rnorm0, ndigit, 
+c     &                '_getv0: re-orthonalization ; rnorm0 is')
+c          call svout (logfil, 1, rnorm, ndigit, 
+c     &                '_getv0: re-orthonalization ; rnorm is')
+c      end if
 c
       if (rnorm .gt. 0.717*rnorm0) go to 50
 c 
@@ -391,18 +391,18 @@ c
 c 
    50 continue
 c
-      if (msglvl .gt. 0) then
-         call svout (logfil, 1, rnorm, ndigit,
-     &        '_getv0: B-norm of initial / restarted starting vector')
-      end if
-      if (msglvl .gt. 2) then
-         call cvout (logfil, n, resid, ndigit,
-     &        '_getv0: initial / restarted starting vector')
-      end if
+c      if (msglvl .gt. 0) then
+c         call svout (logfil, 1, rnorm, ndigit,
+c     &        '_getv0: B-norm of initial / restarted starting vector')
+c      end if
+c      if (msglvl .gt. 2) then
+c         call cvout (logfil, n, resid, ndigit,
+c     &        '_getv0: initial / restarted starting vector')
+c      end if
       ido = 99
 c 
-      call second (t1)
-      tgetv0 = tgetv0 + (t1 - t0)
+c      call second (t1)
+c      tgetv0 = tgetv0 + (t1 - t0)
 c 
  9000 continue
       return

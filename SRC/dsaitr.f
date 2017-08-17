@@ -209,8 +209,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+c      include   'debug.h'
+c      include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -300,8 +300,8 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 c
-         call second (t0)
-         msglvl = msaitr
+c         call second (t0)
+c         msglvl = msaitr
 c 
 c        %------------------------------%
 c        | Initial call to this routine |
@@ -363,12 +363,12 @@ c     %--------------------------------------------------------------%
 c
  1000 continue
 c
-         if (msglvl .gt. 2) then
-            call ivout (logfil, 1, j, ndigit, 
-     &                  '_saitr: generating Arnoldi vector no.')
-            call dvout (logfil, 1, rnorm, ndigit, 
-     &                  '_saitr: B-norm of the current residual =')
-         end if
+c         if (msglvl .gt. 2) then
+c            call ivout (logfil, 1, j, ndigit, 
+c     &                  '_saitr: generating Arnoldi vector no.')
+c            call dvout (logfil, 1, rnorm, ndigit, 
+c     &                  '_saitr: B-norm of the current residual =')
+c         end if
 c 
 c        %---------------------------------------------------------%
 c        | Check for exact zero. Equivalent to determing whether a |
@@ -383,10 +383,10 @@ c           | vector which is orthogonal to the current Arnoldi |
 c           | basis and continue the iteration.                 |
 c           %---------------------------------------------------%
 c
-            if (msglvl .gt. 0) then
-               call ivout (logfil, 1, j, ndigit,
-     &                     '_saitr: ****** restart at step ******')
-            end if
+c            if (msglvl .gt. 0) then
+c               call ivout (logfil, 1, j, ndigit,
+c     &                     '_saitr: ****** restart at step ******')
+c            end if
 c 
 c           %---------------------------------------------%
 c           | ITRY is the loop variable that controls the |
@@ -394,7 +394,7 @@ c           | maximum amount of times that a restart is   |
 c           | attempted. NRSTRT is used by stat.h         |
 c           %---------------------------------------------%
 c
-            nrstrt = nrstrt + 1
+c            nrstrt = nrstrt + 1
             itry   = 1
    20       continue
             rstart = .true.
@@ -420,8 +420,8 @@ c              | which spans OP and exit.                       |
 c              %------------------------------------------------%
 c
                info = j - 1
-               call second (t1)
-               tsaitr = tsaitr + (t1 - t0)
+c               call second (t1)
+c               tsaitr = tsaitr + (t1 - t0)
                ido = 99
                go to 9000
             end if
@@ -459,8 +459,8 @@ c        | Note that this is not quite yet r_{j}. See STEP 4    |
 c        %------------------------------------------------------%
 c
          step3 = .true.
-         nopx  = nopx + 1
-         call second (t2)
+c         nopx  = nopx + 1
+c         call second (t2)
          call dcopy (n, v(1,j), 1, workd(ivj), 1)
          ipntr(1) = ivj
          ipntr(2) = irj
@@ -479,8 +479,8 @@ c        | Back from reverse communication;  |
 c        | WORKD(IRJ:IRJ+N-1) := OP*v_{j}.   |
 c        %-----------------------------------%
 c
-         call second (t3)
-         tmvopx = tmvopx + (t3 - t2)
+c         call second (t3)
+c         tmvopx = tmvopx + (t3 - t2)
 c 
          step3 = .false.
 c
@@ -500,9 +500,9 @@ c        | assumed to have A*v_{j}.                  |
 c        %-------------------------------------------%
 c
          if (mode .eq. 2) go to 65
-         call second (t2)
+c         call second (t2)
          if (bmat .eq. 'G') then
-            nbx = nbx + 1
+c            nbx = nbx + 1
             step4 = .true.
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -523,10 +523,10 @@ c        | Back from reverse communication;  |
 c        | WORKD(IPJ:IPJ+N-1) := B*OP*v_{j}. |
 c        %-----------------------------------%
 c
-         if (bmat .eq. 'G') then
-            call second (t3)
-            tmvbx = tmvbx + (t3 - t2)
-         end if 
+c         if (bmat .eq. 'G') then
+c            call second (t3)
+c            tmvbx = tmvbx + (t3 - t2)
+c         end if 
 c
          step4 = .false.
 c
@@ -592,14 +592,14 @@ c
          else
             h(j,1) = rnorm
          end if
-         call second (t4)
+c         call second (t4)
 c 
          orth1 = .true.
          iter  = 0
 c 
-         call second (t2)
+c         call second (t2)
          if (bmat .eq. 'G') then
-            nbx = nbx + 1
+c            nbx = nbx + 1
             call dcopy (n, resid, 1, workd(irj), 1)
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -620,10 +620,10 @@ c        | Back from reverse communication if ORTH1 = .true. |
 c        | WORKD(IPJ:IPJ+N-1) := B*r_{j}.                    |
 c        %---------------------------------------------------%
 c
-         if (bmat .eq. 'G') then
-            call second (t3)
-            tmvbx = tmvbx + (t3 - t2)
-         end if
+c         if (bmat .eq. 'G') then
+c            call second (t3)
+c            tmvbx = tmvbx + (t3 - t2)
+c         end if
 c 
          orth1 = .false.
 c
@@ -654,7 +654,7 @@ c        | to enforce ||v(:,1:j)^T * r_{j}|| .le. eps * || r_{j} ||  |
 c        %-----------------------------------------------------------%
 c
          if (rnorm .gt. 0.717*wnorm) go to 100
-         nrorth = nrorth + 1
+c         nrorth = nrorth + 1
 c 
 c        %---------------------------------------------------%
 c        | Enter the Iterative refinement phase. If further  |
@@ -665,12 +665,12 @@ c        %---------------------------------------------------%
 c
    80    continue
 c
-         if (msglvl .gt. 2) then
-            xtemp(1) = wnorm
-            xtemp(2) = rnorm
-            call dvout (logfil, 2, xtemp, ndigit, 
-     &           '_saitr: re-orthonalization ; wnorm and rnorm are')
-         end if
+c         if (msglvl .gt. 2) then
+c            xtemp(1) = wnorm
+c            xtemp(2) = rnorm
+c            call dvout (logfil, 2, xtemp, ndigit, 
+c     &           '_saitr: re-orthonalization ; wnorm and rnorm are')
+c         end if
 c
 c        %----------------------------------------------------%
 c        | Compute V_{j}^T * B * r_{j}.                       |
@@ -695,9 +695,9 @@ c
          h(j,2) = h(j,2) + workd(irj + j - 1)
 c 
          orth2 = .true.
-         call second (t2)
+c         call second (t2)
          if (bmat .eq. 'G') then
-            nbx = nbx + 1
+c            nbx = nbx + 1
             call dcopy (n, resid, 1, workd(irj), 1)
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -718,10 +718,10 @@ c        %---------------------------------------------------%
 c        | Back from reverse communication if ORTH2 = .true. |
 c        %---------------------------------------------------%
 c
-         if (bmat .eq. 'G') then
-            call second (t3)
-            tmvbx = tmvbx + (t3 - t2)
-         end if
+c         if (bmat .eq. 'G') then
+c            call second (t3)
+c            tmvbx = tmvbx + (t3 - t2)
+c         end if
 c
 c        %-----------------------------------------------------%
 c        | Compute the B-norm of the corrected residual r_{j}. |
@@ -734,16 +734,16 @@ c
              rnorm1 = dnrm2(n, resid, 1)
          end if
 c
-         if (msglvl .gt. 0 .and. iter .gt. 0) then
-            call ivout (logfil, 1, j, ndigit,
-     &           '_saitr: Iterative refinement for Arnoldi residual')
-            if (msglvl .gt. 2) then
-                xtemp(1) = rnorm
-                xtemp(2) = rnorm1
-                call dvout (logfil, 2, xtemp, ndigit,
-     &           '_saitr: iterative refinement ; rnorm and rnorm1 are')
-            end if
-         end if
+c         if (msglvl .gt. 0 .and. iter .gt. 0) then
+c            call ivout (logfil, 1, j, ndigit,
+c     &           '_saitr: Iterative refinement for Arnoldi residual')
+c            if (msglvl .gt. 2) then
+c                xtemp(1) = rnorm
+c                xtemp(2) = rnorm1
+c                call dvout (logfil, 2, xtemp, ndigit,
+c     &           '_saitr: iterative refinement ; rnorm and rnorm1 are')
+c            end if
+c         end if
 c 
 c        %-----------------------------------------%
 c        | Determine if we need to perform another |
@@ -765,7 +765,7 @@ c           | Another step of iterative refinement step |
 c           | is required. NITREF is used by stat.h     |
 c           %-------------------------------------------%
 c
-            nitref = nitref + 1
+c            nitref = nitref + 1
             rnorm  = rnorm1
             iter   = iter + 1
             if (iter .le. 1) go to 80
@@ -791,8 +791,8 @@ c
          rstart = .false.
          orth2  = .false.
 c 
-         call second (t5)
-         titref = titref + (t5 - t4)
+c         call second (t5)
+c         titref = titref + (t5 - t4)
 c 
 c        %----------------------------------------------------------%
 c        | Make sure the last off-diagonal element is non negative  |
@@ -815,18 +815,18 @@ c        %------------------------------------%
 c
          j = j + 1
          if (j .gt. k+np) then
-            call second (t1)
-            tsaitr = tsaitr + (t1 - t0)
+c            call second (t1)
+c            tsaitr = tsaitr + (t1 - t0)
             ido = 99
 c
-            if (msglvl .gt. 1) then
-               call dvout (logfil, k+np, h(1,2), ndigit, 
-     &         '_saitr: main diagonal of matrix H of step K+NP.')
-               if (k+np .gt. 1) then
-               call dvout (logfil, k+np-1, h(2,1), ndigit, 
-     &         '_saitr: sub diagonal of matrix H of step K+NP.')
-               end if
-            end if
+c            if (msglvl .gt. 1) then
+c               call dvout (logfil, k+np, h(1,2), ndigit, 
+c     &         '_saitr: main diagonal of matrix H of step K+NP.')
+c               if (k+np .gt. 1) then
+c               call dvout (logfil, k+np-1, h(2,1), ndigit, 
+c     &         '_saitr: sub diagonal of matrix H of step K+NP.')
+c               end if
+c            end if
 c
             go to 9000
          end if

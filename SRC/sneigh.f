@@ -104,8 +104,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+c      include   'debug.h'
+c      include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -170,13 +170,13 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 c
-      call second (t0)
-      msglvl = mneigh
+c      call second (t0)
+c      msglvl = mneigh
 c 
-      if (msglvl .gt. 2) then
-          call smout (logfil, n, n, h, ldh, ndigit, 
-     &         '_neigh: Entering upper Hessenberg matrix H ')
-      end if
+c      if (msglvl .gt. 2) then
+c          call smout (logfil, n, n, h, ldh, ndigit, 
+c     &         '_neigh: Entering upper Hessenberg matrix H ')
+c      end if
 c 
 c     %-----------------------------------------------------------%
 c     | 1. Compute the eigenvalues, the last components of the    |
@@ -191,10 +191,10 @@ c
      &             ierr)
       if (ierr .ne. 0) go to 9000
 c
-      if (msglvl .gt. 1) then
-         call svout (logfil, n, bounds, ndigit,
-     &              '_neigh: last row of the Schur matrix for H')
-      end if
+c      if (msglvl .gt. 1) then
+c         call svout (logfil, n, bounds, ndigit,
+c     &              '_neigh: last row of the Schur matrix for H')
+c      end if
 c
 c     %-----------------------------------------------------------%
 c     | 2. Compute the eigenvectors of the full Schur form T and  |
@@ -254,10 +254,10 @@ c
 c
       call sgemv ('T', n, n, one, q, ldq, bounds, 1, zero, workl, 1)
 c
-      if (msglvl .gt. 1) then
-         call svout (logfil, n, workl, ndigit,
-     &              '_neigh: Last row of the eigenvector matrix for H')
-      end if
+c      if (msglvl .gt. 1) then
+c         call svout (logfil, n, workl, ndigit,
+c     &              '_neigh: Last row of the eigenvector matrix for H')
+c      end if
 c
 c     %----------------------------%
 c     | Compute the Ritz estimates |
@@ -292,17 +292,17 @@ c
          end if
    20 continue
 c
-      if (msglvl .gt. 2) then
-         call svout (logfil, n, ritzr, ndigit,
-     &              '_neigh: Real part of the eigenvalues of H')
-         call svout (logfil, n, ritzi, ndigit,
-     &              '_neigh: Imaginary part of the eigenvalues of H')
-         call svout (logfil, n, bounds, ndigit,
-     &              '_neigh: Ritz estimates for the eigenvalues of H')
-      end if
+c      if (msglvl .gt. 2) then
+c         call svout (logfil, n, ritzr, ndigit,
+c     &              '_neigh: Real part of the eigenvalues of H')
+c         call svout (logfil, n, ritzi, ndigit,
+c     &              '_neigh: Imaginary part of the eigenvalues of H')
+c         call svout (logfil, n, bounds, ndigit,
+c     &              '_neigh: Ritz estimates for the eigenvalues of H')
+c      end if
 c
-      call second (t1)
-      tneigh = tneigh + (t1 - t0)
+c      call second (t1)
+c      tneigh = tneigh + (t1 - t0)
 c
  9000 continue
       return

@@ -139,8 +139,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+c      include   'debug.h'
+c      include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -240,8 +240,8 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 c
-      call second (t0)
-      msglvl = mcapps
+c      call second (t0)
+c      msglvl = mcapps
 c 
       kplusp = kev + np 
 c 
@@ -267,12 +267,12 @@ c
       do 110 jj = 1, np
          sigma = shift(jj)
 c
-         if (msglvl .gt. 2 ) then
-            call ivout (logfil, 1, jj, ndigit, 
-     &               '_napps: shift number.')
-            call cvout (logfil, 1, sigma, ndigit, 
-     &               '_napps: Value of the shift ')
-         end if
+c         if (msglvl .gt. 2 ) then
+c            call ivout (logfil, 1, jj, ndigit, 
+c     &               '_napps: shift number.')
+c            call cvout (logfil, 1, sigma, ndigit, 
+c     &               '_napps: Value of the shift ')
+c         end if
 c
          istart = 1
    20    continue
@@ -290,14 +290,14 @@ c
      &         tst1 = clanhs( '1', kplusp-jj+1, h, ldh, workl )
             if ( abs(real(h(i+1,i))) 
      &           .le. max(ulp*tst1, smlnum) )  then
-               if (msglvl .gt. 0) then
-                  call ivout (logfil, 1, i, ndigit, 
-     &                 '_napps: matrix splitting at row/column no.')
-                  call ivout (logfil, 1, jj, ndigit, 
-     &                 '_napps: matrix splitting with shift number.')
-                  call cvout (logfil, 1, h(i+1,i), ndigit, 
-     &                 '_napps: off diagonal element.')
-               end if
+c               if (msglvl .gt. 0) then
+c                  call ivout (logfil, 1, i, ndigit, 
+c     &                 '_napps: matrix splitting at row/column no.')
+c                  call ivout (logfil, 1, jj, ndigit, 
+c     &                 '_napps: matrix splitting with shift number.')
+c                  call cvout (logfil, 1, h(i+1,i), ndigit, 
+c     &                 '_napps: off diagonal element.')
+c               end if
                iend = i
                h(i+1,i) = zero
                go to 40
@@ -306,12 +306,12 @@ c
          iend = kplusp
    40    continue
 c
-         if (msglvl .gt. 2) then
-             call ivout (logfil, 1, istart, ndigit, 
-     &                   '_napps: Start of current block ')
-             call ivout (logfil, 1, iend, ndigit, 
-     &                   '_napps: End of current block ')
-         end if
+c         if (msglvl .gt. 2) then
+c             call ivout (logfil, 1, istart, ndigit, 
+c     &                   '_napps: Start of current block ')
+c             call ivout (logfil, 1, iend, ndigit, 
+c     &                   '_napps: End of current block ')
+c         end if
 c
 c        %------------------------------------------------%
 c        | No reason to apply a shift to block of order 1 |
@@ -480,23 +480,23 @@ c
       if ( real( h(kev+1,kev) ) .gt. rzero )
      &   call caxpy (n, h(kev+1,kev), v(1,kev+1), 1, resid, 1)
 c
-      if (msglvl .gt. 1) then
-         call cvout (logfil, 1, q(kplusp,kev), ndigit,
-     &        '_napps: sigmak = (e_{kev+p}^T*Q)*e_{kev}')
-         call cvout (logfil, 1, h(kev+1,kev), ndigit,
-     &        '_napps: betak = e_{kev+1}^T*H*e_{kev}')
-         call ivout (logfil, 1, kev, ndigit, 
-     &               '_napps: Order of the final Hessenberg matrix ')
-         if (msglvl .gt. 2) then
-            call cmout (logfil, kev, kev, h, ldh, ndigit,
-     &      '_napps: updated Hessenberg matrix H for next iteration')
-         end if
+c      if (msglvl .gt. 1) then
+c         call cvout (logfil, 1, q(kplusp,kev), ndigit,
+c     &        '_napps: sigmak = (e_{kev+p}^T*Q)*e_{kev}')
+c         call cvout (logfil, 1, h(kev+1,kev), ndigit,
+c     &        '_napps: betak = e_{kev+1}^T*H*e_{kev}')
+c         call ivout (logfil, 1, kev, ndigit, 
+c     &               '_napps: Order of the final Hessenberg matrix ')
+c         if (msglvl .gt. 2) then
+c            call cmout (logfil, kev, kev, h, ldh, ndigit,
+c     &      '_napps: updated Hessenberg matrix H for next iteration')
+c         end if
 c
-      end if
+c      end if
 c
  9000 continue
-      call second (t1)
-      tcapps = tcapps + (t1 - t0)
+c      call second (t1)
+c      tcapps = tcapps + (t1 - t0)
 c 
       return
 c

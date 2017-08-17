@@ -25,14 +25,14 @@
 # | other than your home directory.      |
 # %--------------------------------------%
 #
-home = ~/ARPACK
+home = $(HOME)/ARPACK
 #
 #  %--------------------------------------%
 #  | The platform identifier to suffix to |
 #  | the end of library names             |
 #  %--------------------------------------%
 #
-PLAT = linux
+PLAT = 
 #
 #  %------------------------------------------------------%
 #  | The directories to find the various pieces of ARPACK |
@@ -40,7 +40,7 @@ PLAT = linux
 #
 #BLASdir      = $(home)/BLAS
 #LAPACKdir    = $(home)/LAPACK
-UTILdir      = $(home)/UTIL
+#UTILdir      = $(home)/UTIL
 SRCdir       = $(home)/SRC
 #
 #DIRS        = $(BLASdir) $(LAPACKdir) $(UTILdir) $(SRCdir)
@@ -51,15 +51,16 @@ SRCdir       = $(home)/SRC
 # | NOTE: ARPACK assumes the use of LAPACK version 2 codes.           |
 # %-------------------------------------------------------------------%
 #
-DIRS         = $(UTILdir) $(SRCdir)
+#DIRS         = $(UTILdir) $(SRCdir)
+DIRS         = $(SRCdir)
 #
 # %---------------------------------------------------%
 # | The name of the libraries to be created/linked to |
 # %---------------------------------------------------%
 #
-ARPACKLIB  = $(home)/libarpack_$(PLAT).a
-LAPACKLIB = $(home)/liblapack_$(PLAT).a
-BLASLIB = $(home)/libblas_$(PLAT).a
+ARPACKLIB  = $(home)/libarpack.a
+LAPACKLIB = 
+BLASLIB = 
 #
 ALIBS =  $(ARPACKLIB) $(LAPACKLIB) $(BLASLIB) 
 #
@@ -101,8 +102,8 @@ ALIBS =  $(ARPACKLIB) $(LAPACKLIB) $(BLASLIB)
 # | for your system.                        |
 # %-----------------------------------------%
 #
-FC      = f77
-FFLAGS	= -O
+FC      = ifort
+FFLAGS	= -O3
 
 LDFLAGS = 
 CD      = cd
@@ -127,7 +128,7 @@ SHELL   = sh
 #
 AR = ar 
 ARFLAGS = rv
-
+#RANLIB  = touch
 RANLIB   = ranlib
 #
 # %----------------------------------%

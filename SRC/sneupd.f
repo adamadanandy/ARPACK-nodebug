@@ -309,8 +309,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+c      include   'debug.h'
+c      include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -390,7 +390,7 @@ c     %------------------------%
 c     | Set default parameters |
 c     %------------------------%
 c
-      msglvl = mneupd
+c      msglvl = mneupd
       mode = iparam(7)
       nconv = iparam(5)
       info = 0
@@ -527,14 +527,14 @@ c
       rnorm = workl(ih+2)
       workl(ih+2) = zero
 c
-      if (msglvl .gt. 2) then
-         call svout(logfil, ncv, workl(irr), ndigit,
-     &   '_neupd: Real part of Ritz values passed in from _NAUPD.')
-         call svout(logfil, ncv, workl(iri), ndigit,
-     &   '_neupd: Imag part of Ritz values passed in from _NAUPD.')
-         call svout(logfil, ncv, workl(ibd), ndigit,
-     &   '_neupd: Ritz estimates passed in from _NAUPD.')
-      end if
+c      if (msglvl .gt. 2) then
+c         call svout(logfil, ncv, workl(irr), ndigit,
+c     &   '_neupd: Real part of Ritz values passed in from _NAUPD.')
+c         call svout(logfil, ncv, workl(iri), ndigit,
+c     &   '_neupd: Imag part of Ritz values passed in from _NAUPD.')
+c         call svout(logfil, ncv, workl(ibd), ndigit,
+c     &   '_neupd: Ritz estimates passed in from _NAUPD.')
+c      end if
 c
       if (rvec) then
 c     
@@ -566,14 +566,14 @@ c
      &                np           , workl(irr), workl(iri),
      &                workl(bounds), workl     , workl(np+1))
 c
-         if (msglvl .gt. 2) then
-            call svout(logfil, ncv, workl(irr), ndigit,
-     &      '_neupd: Real part of Ritz values after calling _NGETS.')
-            call svout(logfil, ncv, workl(iri), ndigit,
-     &      '_neupd: Imag part of Ritz values after calling _NGETS.')
-            call svout(logfil, ncv, workl(bounds), ndigit,
-     &      '_neupd: Ritz value indices after calling _NGETS.')
-         end if
+c         if (msglvl .gt. 2) then
+c            call svout(logfil, ncv, workl(irr), ndigit,
+c     &      '_neupd: Real part of Ritz values after calling _NGETS.')
+c            call svout(logfil, ncv, workl(iri), ndigit,
+c     &      '_neupd: Imag part of Ritz values after calling _NGETS.')
+c            call svout(logfil, ncv, workl(bounds), ndigit,
+c     &      '_neupd: Ritz value indices after calling _NGETS.')
+c         end if
 c
 c        %-----------------------------------------------------%
 c        | Record indices of the converged wanted Ritz values  |
@@ -600,12 +600,12 @@ c        | are different then there has probably been an error       |
 c        | caused by incorrect passing of the dnaupd data.           |
 c        %-----------------------------------------------------------%
 c
-         if (msglvl .gt. 2) then
-             call ivout(logfil, 1, numcnv, ndigit,
-     &            '_neupd: Number of specified eigenvalues')
-             call ivout(logfil, 1, nconv, ndigit,
-     &            '_neupd: Number of "converged" eigenvalues')
-         end if
+c         if (msglvl .gt. 2) then
+c             call ivout(logfil, 1, numcnv, ndigit,
+c     &            '_neupd: Number of specified eigenvalues')
+c             call ivout(logfil, 1, nconv, ndigit,
+c     &            '_neupd: Number of "converged" eigenvalues')
+c         end if
 c
          if (numcnv .ne. nconv) then
             info = -15
@@ -636,19 +636,19 @@ c
             go to 9000
          end if
 c     
-         if (msglvl .gt. 1) then
-            call svout(logfil, ncv, workl(iheigr), ndigit,
-     &           '_neupd: Real part of the eigenvalues of H')
-            call svout(logfil, ncv, workl(iheigi), ndigit,
-     &           '_neupd: Imaginary part of the Eigenvalues of H')
-            call svout(logfil, ncv, workl(ihbds), ndigit,
-     &           '_neupd: Last row of the Schur vector matrix')
-            if (msglvl .gt. 3) then
-               call smout(logfil       , ncv, ncv   , 
-     &                     workl(iuptri), ldh, ndigit,
-     &              '_neupd: The upper quasi-triangular matrix ')
-            end if
-         end if 
+c         if (msglvl .gt. 1) then
+c            call svout(logfil, ncv, workl(iheigr), ndigit,
+c     &           '_neupd: Real part of the eigenvalues of H')
+c            call svout(logfil, ncv, workl(iheigi), ndigit,
+c     &           '_neupd: Imaginary part of the Eigenvalues of H')
+c            call svout(logfil, ncv, workl(ihbds), ndigit,
+c     &           '_neupd: Last row of the Schur vector matrix')
+c            if (msglvl .gt. 3) then
+c               call smout(logfil       , ncv, ncv   , 
+c     &                     workl(iuptri), ldh, ndigit,
+c     &              '_neupd: The upper quasi-triangular matrix ')
+c            end if
+c         end if 
 c
          if (reord) then
 c     
@@ -671,17 +671,17 @@ c
                go to 9000
             end if
 c
-            if (msglvl .gt. 2) then
-                call svout(logfil, ncv, workl(iheigr), ndigit,
-     &           '_neupd: Real part of the eigenvalues of H--reordered')
-                call svout(logfil, ncv, workl(iheigi), ndigit,
-     &           '_neupd: Imag part of the eigenvalues of H--reordered')
-                if (msglvl .gt. 3) then
-                   call smout(logfil       , ncv, ncv   , 
-     &                         workl(iuptri), ldq, ndigit,
-     &             '_neupd: Quasi-triangular matrix after re-ordering')
-                end if
-            end if
+c            if (msglvl .gt. 2) then
+c                call svout(logfil, ncv, workl(iheigr), ndigit,
+c     &           '_neupd: Real part of the eigenvalues of H--reordered')
+c                call svout(logfil, ncv, workl(iheigi), ndigit,
+c     &           '_neupd: Imag part of the eigenvalues of H--reordered')
+c                if (msglvl .gt. 3) then
+c                   call smout(logfil       , ncv, ncv   , 
+c     &                         workl(iuptri), ldq, ndigit,
+c     &             '_neupd: Quasi-triangular matrix after re-ordering')
+c                end if
+c            end if
 c     
          end if
 c
@@ -850,16 +850,16 @@ c
                end if
  45         continue
 c
-            if (msglvl .gt. 2) then
-               call scopy(ncv, workl(invsub+ncv-1), ldq,
-     &                    workl(ihbds), 1)
-               call svout(logfil, ncv, workl(ihbds), ndigit,
-     &              '_neupd: Last row of the eigenvector matrix for T')
-               if (msglvl .gt. 3) then
-                  call smout(logfil, ncv, ncv, workl(invsub), ldq, 
-     &                 ndigit, '_neupd: The eigenvector matrix for T')
-               end if
-            end if
+c            if (msglvl .gt. 2) then
+c               call scopy(ncv, workl(invsub+ncv-1), ldq,
+c     &                    workl(ihbds), 1)
+c               call svout(logfil, ncv, workl(ihbds), ndigit,
+c     &              '_neupd: Last row of the eigenvector matrix for T')
+c               if (msglvl .gt. 3) then
+c                  call smout(logfil, ncv, ncv, workl(invsub), ldq, 
+c     &                 ndigit, '_neupd: The eigenvector matrix for T')
+c               end if
+c            end if
 c
 c           %---------------------------------------%
 c           | Copy Ritz estimates into workl(ihbds) |
@@ -987,21 +987,21 @@ c
 c
       end if
 c
-      if (type .eq. 'SHIFTI' .and. msglvl .gt. 1) then
-         call svout(logfil, nconv, dr, ndigit,
-     &   '_neupd: Untransformed real part of the Ritz valuess.')
-         call svout (logfil, nconv, di, ndigit,
-     &   '_neupd: Untransformed imag part of the Ritz valuess.')
-         call svout(logfil, nconv, workl(ihbds), ndigit,
-     &   '_neupd: Ritz estimates of untransformed Ritz values.')
-      else if (type .eq. 'REGULR' .and. msglvl .gt. 1) then
-         call svout(logfil, nconv, dr, ndigit,
-     &   '_neupd: Real parts of converged Ritz values.')
-         call svout (logfil, nconv, di, ndigit,
-     &   '_neupd: Imag parts of converged Ritz values.')
-         call svout(logfil, nconv, workl(ihbds), ndigit,
-     &   '_neupd: Associated Ritz estimates.')
-      end if
+c      if (type .eq. 'SHIFTI' .and. msglvl .gt. 1) then
+c         call svout(logfil, nconv, dr, ndigit,
+c     &   '_neupd: Untransformed real part of the Ritz valuess.')
+c         call svout (logfil, nconv, di, ndigit,
+c     &   '_neupd: Untransformed imag part of the Ritz valuess.')
+c         call svout(logfil, nconv, workl(ihbds), ndigit,
+c     &   '_neupd: Ritz estimates of untransformed Ritz values.')
+c      else if (type .eq. 'REGULR' .and. msglvl .gt. 1) then
+c         call svout(logfil, nconv, dr, ndigit,
+c     &   '_neupd: Real parts of converged Ritz values.')
+c         call svout (logfil, nconv, di, ndigit,
+c     &   '_neupd: Imag parts of converged Ritz values.')
+c         call svout(logfil, nconv, workl(ihbds), ndigit,
+c     &   '_neupd: Associated Ritz estimates.')
+c      end if
 c 
 c     %-------------------------------------------------%
 c     | Eigenvector Purification step. Formally perform |

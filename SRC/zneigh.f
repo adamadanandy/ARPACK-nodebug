@@ -104,8 +104,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+c      include   'debug.h'
+c      include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -171,13 +171,13 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 c
-      call second (t0)
-      msglvl = mceigh
+c      call second (t0)
+c      msglvl = mceigh
 c 
-      if (msglvl .gt. 2) then
-          call zmout (logfil, n, n, h, ldh, ndigit, 
-     &         '_neigh: Entering upper Hessenberg matrix H ')
-      end if
+c      if (msglvl .gt. 2) then
+c          call zmout (logfil, n, n, h, ldh, ndigit, 
+c     &         '_neigh: Entering upper Hessenberg matrix H ')
+c      end if
 c 
 c     %----------------------------------------------------------%
 c     | 1. Compute the eigenvalues, the last components of the   |
@@ -194,10 +194,10 @@ c
       if (ierr .ne. 0) go to 9000
 c
       call zcopy (n, q(n-1,1), ldq, bounds, 1)
-      if (msglvl .gt. 1) then
-         call zvout (logfil, n, bounds, ndigit,
-     &              '_neigh: last row of the Schur matrix for H')
-      end if
+c      if (msglvl .gt. 1) then
+c         call zvout (logfil, n, bounds, ndigit,
+c     &              '_neigh: last row of the Schur matrix for H')
+c      end if
 c
 c     %----------------------------------------------------------%
 c     | 2. Compute the eigenvectors of the full Schur form T and |
@@ -224,11 +224,11 @@ c
             call zdscal ( n, rone / temp, q(1,j), 1 )
    10 continue
 c
-      if (msglvl .gt. 1) then
-         call zcopy(n, q(n,1), ldq, workl, 1)
-         call zvout (logfil, n, workl, ndigit,
-     &              '_neigh: Last row of the eigenvector matrix for H')
-      end if
+c      if (msglvl .gt. 1) then
+c         call zcopy(n, q(n,1), ldq, workl, 1)
+c         call zvout (logfil, n, workl, ndigit,
+c     &              '_neigh: Last row of the eigenvector matrix for H')
+c      end if
 c
 c     %----------------------------%
 c     | Compute the Ritz estimates |
@@ -237,15 +237,15 @@ c
       call zcopy(n, q(n,1), n, bounds, 1)
       call zdscal(n, rnorm, bounds, 1)
 c
-      if (msglvl .gt. 2) then
-         call zvout (logfil, n, ritz, ndigit,
-     &              '_neigh: The eigenvalues of H')
-         call zvout (logfil, n, bounds, ndigit,
-     &              '_neigh: Ritz estimates for the eigenvalues of H')
-      end if
+c      if (msglvl .gt. 2) then
+c         call zvout (logfil, n, ritz, ndigit,
+c     &              '_neigh: The eigenvalues of H')
+c         call zvout (logfil, n, bounds, ndigit,
+c     &              '_neigh: Ritz estimates for the eigenvalues of H')
+c      end if
 c
-      call second(t1)
-      tceigh = tceigh + (t1 - t0)
+c      call second(t1)
+c      tceigh = tceigh + (t1 - t0)
 c
  9000 continue
       return

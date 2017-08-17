@@ -21,35 +21,35 @@ c     %--------------------------------%
 c     | See stat.doc for documentation |
 c     %--------------------------------%
 c
-      include   'stat.h'
+c      include   'stat.h'
 c 
 c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
 c
-      nopx   = 0
-      nbx    = 0
-      nrorth = 0
-      nitref = 0
-      nrstrt = 0
+c      nopx   = 0
+c      nbx    = 0
+c      nrorth = 0
+c      nitref = 0
+c      nrstrt = 0
 c 
-      tnaupd = 0.0E+0
-      tnaup2 = 0.0E+0
-      tnaitr = 0.0E+0
-      tneigh = 0.0E+0
-      tngets = 0.0E+0
-      tnapps = 0.0E+0
-      tnconv = 0.0E+0
-      titref = 0.0E+0
-      tgetv0 = 0.0E+0
-      trvec  = 0.0E+0
+c      tnaupd = 0.0E+0
+c      tnaup2 = 0.0E+0
+c      tnaitr = 0.0E+0
+c      tneigh = 0.0E+0
+c      tngets = 0.0E+0
+c      tnapps = 0.0E+0
+c      tnconv = 0.0E+0
+c      titref = 0.0E+0
+c      tgetv0 = 0.0E+0
+c      trvec  = 0.0E+0
 c 
 c     %----------------------------------------------------%
 c     | User time including reverse communication overhead |
 c     %----------------------------------------------------%
 c
-      tmvopx = 0.0E+0
-      tmvbx  = 0.0E+0
+c      tmvopx = 0.0E+0
+c      tmvbx  = 0.0E+0
 c 
       return
 c

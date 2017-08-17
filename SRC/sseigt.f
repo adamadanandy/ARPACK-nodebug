@@ -91,8 +91,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+c      include   'debug.h'
+c      include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -138,26 +138,26 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------% 
 c
-      call second (t0)
-      msglvl = mseigt
+c      call second (t0)
+c      msglvl = mseigt
 c
-      if (msglvl .gt. 0) then
-         call svout (logfil, n, h(1,2), ndigit,
-     &              '_seigt: main diagonal of matrix H')
-         if (n .gt. 1) then
-         call svout (logfil, n-1, h(2,1), ndigit,
-     &              '_seigt: sub diagonal of matrix H')
-         end if
-      end if
+c      if (msglvl .gt. 0) then
+c         call svout (logfil, n, h(1,2), ndigit,
+c     &              '_seigt: main diagonal of matrix H')
+c         if (n .gt. 1) then
+c         call svout (logfil, n-1, h(2,1), ndigit,
+c     &              '_seigt: sub diagonal of matrix H')
+c         end if
+c      end if
 c
       call scopy  (n, h(1,2), 1, eig, 1)
       call scopy  (n-1, h(2,1), 1, workl, 1)
       call sstqrb (n, eig, workl, bounds, workl(n+1), ierr)
       if (ierr .ne. 0) go to 9000
-      if (msglvl .gt. 1) then
-         call svout (logfil, n, bounds, ndigit,
-     &              '_seigt: last row of the eigenvector matrix for H')
-      end if
+c      if (msglvl .gt. 1) then
+c         call svout (logfil, n, bounds, ndigit,
+c     &              '_seigt: last row of the eigenvector matrix for H')
+c      end if
 c
 c     %-----------------------------------------------%
 c     | Finally determine the error bounds associated |
@@ -168,8 +168,8 @@ c
          bounds(k) = rnorm*abs(bounds(k))
    30 continue
 c 
-      call second (t1)
-      tseigt = tseigt + (t1 - t0)
+c      call second (t1)
+c      tseigt = tseigt + (t1 - t0)
 c
  9000 continue
       return

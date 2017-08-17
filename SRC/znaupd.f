@@ -384,8 +384,8 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
-      include   'stat.h'
+c      include   'debug.h'
+c      include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -451,8 +451,8 @@ c        | & message level for debugging |
 c        %-------------------------------%
 c
          call zstatn
-         call second (t0)
-         msglvl = mcaupd
+c         call second (t0)
+c         msglvl = mcaupd
 c
 c        %----------------%
 c        | Error checking |
@@ -511,11 +511,11 @@ c        %------------------------%
 c        | Set default parameters |
 c        %------------------------%
 c
-         if (nb .le. 0)				nb = 1
-         if (tol .le. 0.0D+0 )			tol = dlamch('EpsMach')
+         if (nb .le. 0)                 nb = 1
+         if (tol .le. 0.0D+0 )          tol = dlamch('EpsMach')
          if (ishift .ne. 0  .and.  
      &       ishift .ne. 1  .and.
-     &       ishift .ne. 2) 			ishift = 1
+     &       ishift .ne. 2)             ishift = 1
 c
 c        %----------------------------------------------%
 c        | NP is the number of additional steps to      |
@@ -588,9 +588,9 @@ c
 c 
       iparam(3) = mxiter
       iparam(5) = np
-      iparam(9) = nopx
-      iparam(10) = nbx
-      iparam(11) = nrorth
+c      iparam(9) = nopx
+c      iparam(10) = nbx
+c      iparam(11) = nrorth
 c
 c     %------------------------------------%
 c     | Exit if there was an informational |
@@ -600,58 +600,58 @@ c
       if (info .lt. 0) go to 9000
       if (info .eq. 2) info = 3
 c
-      if (msglvl .gt. 0) then
-         call ivout (logfil, 1, mxiter, ndigit,
-     &               '_naupd: Number of update iterations taken')
-         call ivout (logfil, 1, np, ndigit,
-     &               '_naupd: Number of wanted "converged" Ritz values')
-         call zvout (logfil, np, workl(ritz), ndigit, 
-     &               '_naupd: The final Ritz values')
-         call zvout (logfil, np, workl(bounds), ndigit, 
-     &               '_naupd: Associated Ritz estimates')
-      end if
+c      if (msglvl .gt. 0) then
+c         call ivout (logfil, 1, mxiter, ndigit,
+c     &               '_naupd: Number of update iterations taken')
+c         call ivout (logfil, 1, np, ndigit,
+c     &               '_naupd: Number of wanted "converged" Ritz values')
+c         call zvout (logfil, np, workl(ritz), ndigit, 
+c     &               '_naupd: The final Ritz values')
+c         call zvout (logfil, np, workl(bounds), ndigit, 
+c     &               '_naupd: Associated Ritz estimates')
+c      end if
 c
-      call second (t1)
-      tcaupd = t1 - t0
+c      call second (t1)
+c      tcaupd = t1 - t0
 c
-      if (msglvl .gt. 0) then
+c      if (msglvl .gt. 0) then
 c
 c        %--------------------------------------------------------%
 c        | Version Number & Version Date are defined in version.h |
 c        %--------------------------------------------------------%
 c
-         write (6,1000)
-         write (6,1100) mxiter, nopx, nbx, nrorth, nitref, nrstrt,
-     &                  tmvopx, tmvbx, tcaupd, tcaup2, tcaitr, titref,
-     &                  tgetv0, tceigh, tcgets, tcapps, tcconv, trvec
- 1000    format (//,
-     &      5x, '=============================================',/
-     &      5x, '= Complex implicit Arnoldi update code      =',/
-     &      5x, '= Version Number: ', ' 2.3', 21x, ' =',/
-     &      5x, '= Version Date:   ', ' 07/31/96', 16x,   ' =',/
-     &      5x, '=============================================',/
-     &      5x, '= Summary of timing statistics              =',/
-     &      5x, '=============================================',//)
- 1100    format (
-     &      5x, 'Total number update iterations             = ', i5,/
-     &      5x, 'Total number of OP*x operations            = ', i5,/
-     &      5x, 'Total number of B*x operations             = ', i5,/
-     &      5x, 'Total number of reorthogonalization steps  = ', i5,/
-     &      5x, 'Total number of iterative refinement steps = ', i5,/
-     &      5x, 'Total number of restart steps              = ', i5,/
-     &      5x, 'Total time in user OP*x operation          = ', f12.6,/
-     &      5x, 'Total time in user B*x operation           = ', f12.6,/
-     &      5x, 'Total time in Arnoldi update routine       = ', f12.6,/
-     &      5x, 'Total time in naup2 routine                = ', f12.6,/
-     &      5x, 'Total time in basic Arnoldi iteration loop = ', f12.6,/
-     &      5x, 'Total time in reorthogonalization phase    = ', f12.6,/
-     &      5x, 'Total time in (re)start vector generation  = ', f12.6,/
-     &      5x, 'Total time in Hessenberg eig. subproblem   = ', f12.6,/
-     &      5x, 'Total time in getting the shifts           = ', f12.6,/
-     &      5x, 'Total time in applying the shifts          = ', f12.6,/
-     &      5x, 'Total time in convergence testing          = ', f12.6,/
-     &      5x, 'Total time in computing final Ritz vectors = ', f12.6/)
-      end if
+c         write (6,1000)
+c         write (6,1100) mxiter, nopx, nbx, nrorth, nitref, nrstrt,
+c     &                  tmvopx, tmvbx, tcaupd, tcaup2, tcaitr, titref,
+c     &                  tgetv0, tceigh, tcgets, tcapps, tcconv, trvec
+c 1000    format (//,
+c     &      5x, '=============================================',/
+c     &      5x, '= Complex implicit Arnoldi update code      =',/
+c     &      5x, '= Version Number: ', ' 2.3', 21x, ' =',/
+c     &      5x, '= Version Date:   ', ' 07/31/96', 16x,   ' =',/
+c     &      5x, '=============================================',/
+c     &      5x, '= Summary of timing statistics              =',/
+c     &      5x, '=============================================',//)
+c 1100    format (
+c     &      5x, 'Total number update iterations             = ', i5,/
+c     &      5x, 'Total number of OP*x operations            = ', i5,/
+c     &      5x, 'Total number of B*x operations             = ', i5,/
+c     &      5x, 'Total number of reorthogonalization steps  = ', i5,/
+c     &      5x, 'Total number of iterative refinement steps = ', i5,/
+c     &      5x, 'Total number of restart steps              = ', i5,/
+c     &      5x, 'Total time in user OP*x operation          = ', f12.6,/
+c     &      5x, 'Total time in user B*x operation           = ', f12.6,/
+c     &      5x, 'Total time in Arnoldi update routine       = ', f12.6,/
+c     &      5x, 'Total time in naup2 routine                = ', f12.6,/
+c     &      5x, 'Total time in basic Arnoldi iteration loop = ', f12.6,/
+c     &      5x, 'Total time in reorthogonalization phase    = ', f12.6,/
+c     &      5x, 'Total time in (re)start vector generation  = ', f12.6,/
+c     &      5x, 'Total time in Hessenberg eig. subproblem   = ', f12.6,/
+c     &      5x, 'Total time in getting the shifts           = ', f12.6,/
+c     &      5x, 'Total time in applying the shifts          = ', f12.6,/
+c     &      5x, 'Total time in convergence testing          = ', f12.6,/
+c     &      5x, 'Total time in computing final Ritz vectors = ', f12.6/)
+c      end if
 c
  9000 continue
 c

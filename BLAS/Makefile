@@ -35,7 +35,7 @@ include ../ARmake.inc
 #  The library also contains all extra BLAS routines used by driver
 #  programs in the EXAMPLES directory.
 #
-#  The name of the library is defined by $(BLASLIB) in
+#  The name of the library is defined by $(ARPACKLIB) in
 #  ../ARmake.inc and is created at the next higher directory level.
 #
 #
@@ -70,39 +70,39 @@ ZDRVOBJ = zcopy.o zgemv.o zgeru.o zgemm.o zscal.o zswap.o ztrsm.o ztbsv.o\
 all: single double complex complex16 sdrv ddrv cdrv zdrv
  
 single: $(SOBJ)
-	$(AR) $(ARFLAGS) $(BLASLIB) $(SOBJ)
-	$(RANLIB) $(BLASLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(SOBJ)
+	$(RANLIB) $(ARPACKLIB)
  
 double: $(DOBJ)
-	$(AR) $(ARFLAGS) $(BLASLIB) $(DOBJ)
-	$(RANLIB) $(BLASLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(DOBJ)
+	$(RANLIB) $(ARPACKLIB)
 
 complex: $(COBJ)
-	$(AR) $(ARFLAGS) $(BLASLIB) $(COBJ)
-	$(RANLIB) $(BLASLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(COBJ)
+	$(RANLIB) $(ARPACKLIB)
 
 complex16: $(ZOBJ)
-	$(AR) $(ARFLAGS) $(BLASLIB) $(ZOBJ)
-	$(RANLIB) $(BLASLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(ZOBJ)
+	$(RANLIB) $(ARPACKLIB)
 #
 # Add routines needed by driver programs (in the EXAMPLES
-# directory) to $(BLASLIB).
+# directory) to $(ARPACKLIB).
 #
 sdrv: $(SDRVOBJ) $(CDRVOBJ)
-	$(AR) $(ARFLAGS) $(BLASLIB) $(SDRVOBJ) $(CDRVOBJ)
-	$(RANLIB) $(BLASLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(SDRVOBJ) $(CDRVOBJ)
+	$(RANLIB) $(ARPACKLIB)
 
 ddrv: $(DDRVOBJ) $(ZDRVOBJ)
-	$(AR) $(ARFLAGS) $(BLASLIB) $(DDRVOBJ) $(ZDRVOBJ)
-	$(RANLIB) $(BLASLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(DDRVOBJ) $(ZDRVOBJ)
+	$(RANLIB) $(ARPACKLIB)
 
 cdrv: $(CDRVOBJ)
-	$(AR) $(ARFLAGS) $(BLASLIB) $(CDRVOBJ)
-	$(RANLIB) $(BLASLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(CDRVOBJ)
+	$(RANLIB) $(ARPACKLIB)
 
 zdrv: $(ZDRVOBJ)
-	$(AR) $(ARFLAGS) $(BLASLIB) $(ZDRVOBJ)
-	$(RANLIB) $(BLASLIB)
+	$(AR) $(ARFLAGS) $(ARPACKLIB) $(ZDRVOBJ)
+	$(RANLIB) $(ARPACKLIB)
 #
 #  clean	- remove all object files
 #
