@@ -333,8 +333,10 @@ c
 c
  90      continue 
 
+#ifdef DEBUG_STAT
          call smout(6, nconv, 3, d, maxncv, -6,
      &             'Ritz values (Real,Imag) and relative residuals')
+#endif
       else 
 c
 c        %-------------------------------------%

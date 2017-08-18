@@ -341,8 +341,10 @@ c            %-----------------------------%
 c            | Display computed residuals. |
 c            %-----------------------------%
 c
+#ifdef DEBUG_STAT
              call smout(6, nconv, 3, d, maxncv, -6,
      &            'Ritz values (Real,Imag) and relative residuals')
+#endif
           end if
 c
 c        %-------------------------------------------%

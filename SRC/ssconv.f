@@ -61,10 +61,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -105,9 +105,9 @@ c
 c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
-c
-c      call second (t0)
-c
+#ifdef DEBUG_STAT
+      call second (t0)
+#endif
       eps23 = slamch('Epsilon-Machine') 
       eps23 = eps23**(2.0E+0 / 3.0E+0)
 c
@@ -125,10 +125,10 @@ c
          end if
 c
    10 continue
-c 
-c      call second (t1)
-c      tsconv = tsconv + (t1 - t0)
-c 
+#ifdef DEBUG_STAT
+      call second (t1)
+      tsconv = tsconv + (t1 - t0)
+#endif
       return
 c
 c     %---------------%

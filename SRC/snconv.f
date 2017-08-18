@@ -68,10 +68,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -118,9 +118,9 @@ c     |     bounds(i) .le. ( TOL * | ritz | )                       |
 c     |                                                             |
 c     | for some appropriate choice of norm.                        |
 c     %-------------------------------------------------------------%
-c
-c      call second (t0)
-c
+#ifdef DEBUG_STAT
+      call second (t0)
+#endif
 c     %---------------------------------%
 c     | Get machine dependent constant. |
 c     %---------------------------------%
@@ -133,10 +133,10 @@ c
          temp = max( eps23, slapy2( ritzr(i), ritzi(i) ) )
          if (bounds(i) .le. tol*temp)   nconv = nconv + 1
    20 continue
-c 
+#ifdef DEBUG_STAT
 c      call second (t1)
 c      tnconv = tnconv + (t1 - t0)
-c 
+#endif
       return
 c
 c     %---------------%

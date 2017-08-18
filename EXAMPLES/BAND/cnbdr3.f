@@ -274,8 +274,10 @@ c
             rd(j,3) = rd(j,3) / slapy2(rd(j,1), rd(j,2))         
  50      continue 
 
+#ifdef DEBUG_STAT
          call smout(6, nconv, 3, rd, maxncv, -6,
      &             'Ritz values (Real,Imag) and relative residuals')
+#endif
       else 
 c
 c        %-------------------------------------%

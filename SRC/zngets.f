@@ -90,10 +90,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -136,10 +136,10 @@ c     %-------------------------------%
 c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
-c 
-c      call second (t0)
-c      msglvl = mcgets
-c 
+#ifdef DEBUG_STAT 
+      call second (t0)
+      msglvl = mcgets
+#endif 
       call zsortc (which, .true., kev+np, ritz, bounds)
 c     
       if ( ishift .eq. 1 ) then
@@ -156,19 +156,19 @@ c
          call zsortc ( 'SM', .true., np, bounds, ritz )
 c
       end if
-c     
-c      call second (t1)
-c      tcgets = tcgets + (t1 - t0)
+#ifdef DEBUG_STAT     
+      call second (t1)
+      tcgets = tcgets + (t1 - t0)
 c
-c      if (msglvl .gt. 0) then
-c         call ivout (logfil, 1, kev, ndigit, '_ngets: KEV is')
-c         call ivout (logfil, 1, np, ndigit, '_ngets: NP is')
-c         call zvout (logfil, kev+np, ritz, ndigit,
-c     &        '_ngets: Eigenvalues of current H matrix ')
-c         call zvout (logfil, kev+np, bounds, ndigit, 
-c     &      '_ngets: Ritz estimates of the current KEV+NP Ritz values')
-c      end if
-c     
+      if (msglvl .gt. 0) then
+         call ivout (logfil, 1, kev, ndigit, '_ngets: KEV is')
+         call ivout (logfil, 1, np, ndigit, '_ngets: NP is')
+         call zvout (logfil, kev+np, ritz, ndigit,
+     &        '_ngets: Eigenvalues of current H matrix ')
+         call zvout (logfil, kev+np, bounds, ndigit, 
+     &      '_ngets: Ritz estimates of the current KEV+NP Ritz values')
+      end if
+#endif     
       return
 c     
 c     %---------------%

@@ -268,8 +268,10 @@ c
 c
  90      continue 
 
+#ifdef DEBUG_STAT
          call dmout(6, nconv, 2, d, maxncv, -6,
      &             'Ritz values and relative residuals')
+#endif
       else 
 c
 c        %-------------------------------------%

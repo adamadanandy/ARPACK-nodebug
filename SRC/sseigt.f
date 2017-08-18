@@ -90,10 +90,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -137,28 +137,29 @@ c     %-------------------------------%
 c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------% 
+#ifdef DEBUG_STAT
+      call second (t0)
+      msglvl = mseigt
 c
-c      call second (t0)
-c      msglvl = mseigt
-c
-c      if (msglvl .gt. 0) then
-c         call svout (logfil, n, h(1,2), ndigit,
-c     &              '_seigt: main diagonal of matrix H')
-c         if (n .gt. 1) then
-c         call svout (logfil, n-1, h(2,1), ndigit,
-c     &              '_seigt: sub diagonal of matrix H')
-c         end if
-c      end if
-c
+      if (msglvl .gt. 0) then
+         call svout (logfil, n, h(1,2), ndigit,
+     &              '_seigt: main diagonal of matrix H')
+         if (n .gt. 1) then
+         call svout (logfil, n-1, h(2,1), ndigit,
+     &              '_seigt: sub diagonal of matrix H')
+         end if
+      end if
+#endif
       call scopy  (n, h(1,2), 1, eig, 1)
       call scopy  (n-1, h(2,1), 1, workl, 1)
       call sstqrb (n, eig, workl, bounds, workl(n+1), ierr)
       if (ierr .ne. 0) go to 9000
-c      if (msglvl .gt. 1) then
-c         call svout (logfil, n, bounds, ndigit,
-c     &              '_seigt: last row of the eigenvector matrix for H')
-c      end if
-c
+#ifdef DEBUG_STAT
+      if (msglvl .gt. 1) then
+         call svout (logfil, n, bounds, ndigit,
+     &              '_seigt: last row of the eigenvector matrix for H')
+      end if
+#endif
 c     %-----------------------------------------------%
 c     | Finally determine the error bounds associated |
 c     | with the n Ritz values of H.                  |
@@ -167,10 +168,10 @@ c
       do 30 k = 1, n
          bounds(k) = rnorm*abs(bounds(k))
    30 continue
-c 
-c      call second (t1)
-c      tseigt = tseigt + (t1 - t0)
-c
+#ifdef DEBUG_STAT
+      call second (t1)
+      tseigt = tseigt + (t1 - t0)
+#endif
  9000 continue
       return
 c

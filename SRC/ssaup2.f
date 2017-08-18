@@ -184,10 +184,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -261,10 +261,10 @@ c        %-------------------------------%
 c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
-c
-c         call second (t0)
-c         msglvl = msaup2
-c
+#ifdef DEBUG_STAT
+         call second (t0)
+         msglvl = msaup2
+#endif
 c        %---------------------------------%
 c        | Set machine dependent constant. |
 c        %---------------------------------%
@@ -400,18 +400,18 @@ c
  1000 continue
 c
          iter = iter + 1
-c
-c         if (msglvl .gt. 0) then
-c            call ivout (logfil, 1, iter, ndigit, 
-c     &           '_saup2: **** Start of major iteration number ****')
-c         end if
-c         if (msglvl .gt. 1) then
-c            call ivout (logfil, 1, nev, ndigit, 
-c     &     '_saup2: The length of the current Lanczos factorization')
-c            call ivout (logfil, 1, np, ndigit, 
-c     &           '_saup2: Extend the Lanczos factorization by')
-c         end if
-c 
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 0) then
+            call ivout (logfil, 1, iter, ndigit, 
+     &           '_saup2: **** Start of major iteration number ****')
+         end if
+         if (msglvl .gt. 1) then
+            call ivout (logfil, 1, nev, ndigit, 
+     &     '_saup2: The length of the current Lanczos factorization')
+            call ivout (logfil, 1, np, ndigit, 
+     &           '_saup2: Extend the Lanczos factorization by')
+         end if
+#endif 
 c        %------------------------------------------------------------%
 c        | Compute NP additional steps of the Lanczos factorization. |
 c        %------------------------------------------------------------%
@@ -444,12 +444,12 @@ c
             go to 1200
          end if
          update = .false.
-c
-c         if (msglvl .gt. 1) then
-c            call svout (logfil, 1, rnorm, ndigit, 
-c     &           '_saup2: Current B-norm of residual for factorization')
-c         end if
-c 
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 1) then
+            call svout (logfil, 1, rnorm, ndigit, 
+     &           '_saup2: Current B-norm of residual for factorization')
+         end if
+#endif
 c        %--------------------------------------------------------%
 c        | Compute the eigenvalues and corresponding error bounds |
 c        | of the current symmetric tridiagonal matrix.           |
@@ -490,19 +490,19 @@ c        %-------------------%
 c
          call scopy (nev, bounds(np+1), 1, workl(np+1), 1)
          call ssconv (nev, ritz(np+1), workl(np+1), tol, nconv)
-c
-c         if (msglvl .gt. 2) then
-c            kp(1) = nev
-c            kp(2) = np
-c            kp(3) = nconv
-c            call ivout (logfil, 3, kp, ndigit,
-c     &                  '_saup2: NEV, NP, NCONV are')
-c            call svout (logfil, kplusp, ritz, ndigit,
-c     &           '_saup2: The eigenvalues of H')
-c            call svout (logfil, kplusp, bounds, ndigit,
-c     &          '_saup2: Ritz estimates of the current NCV Ritz values')
-c         end if
-c
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 2) then
+            kp(1) = nev
+            kp(2) = np
+            kp(3) = nconv
+            call ivout (logfil, 3, kp, ndigit,
+     &                  '_saup2: NEV, NP, NCONV are')
+            call svout (logfil, kplusp, ritz, ndigit,
+     &           '_saup2: The eigenvalues of H')
+            call svout (logfil, kplusp, bounds, ndigit,
+     &          '_saup2: Ritz estimates of the current NCV Ritz values')
+         end if
+#endif
 c        %---------------------------------------------------------%
 c        | Count the number of unwanted Ritz values that have zero |
 c        | Ritz estimates. If any Ritz estimates are equal to zero |
@@ -642,14 +642,14 @@ c           |  rnorm to _seupd if needed               |
 c           %------------------------------------------%
 c
             h(1,1) = rnorm
-c
-c            if (msglvl .gt. 1) then
-c               call svout (logfil, kplusp, ritz, ndigit,
-c     &            '_saup2: Sorted Ritz values.')
-c               call svout (logfil, kplusp, bounds, ndigit,
-c     &            '_saup2: Sorted ritz estimates.')
-c            end if
-c
+#ifdef DEBUG_STAT
+            if (msglvl .gt. 1) then
+               call svout (logfil, kplusp, ritz, ndigit,
+     &            '_saup2: Sorted Ritz values.')
+               call svout (logfil, kplusp, bounds, ndigit,
+     &            '_saup2: Sorted ritz estimates.')
+            end if
+#endif
 c           %------------------------------------%
 c           | Max iterations have been exceeded. | 
 c           %------------------------------------%
@@ -692,22 +692,22 @@ c
      &              workl)
 c
          end if
-c
-c         if (msglvl .gt. 0) then
-c            call ivout (logfil, 1, nconv, ndigit,
-c     &           '_saup2: no. of "converged" Ritz values at this iter.')
-c            if (msglvl .gt. 1) then
-c               kp(1) = nev
-c               kp(2) = np
-c               call ivout (logfil, 2, kp, ndigit,
-c     &              '_saup2: NEV and NP are')
-c               call svout (logfil, nev, ritz(np+1), ndigit,
-c     &              '_saup2: "wanted" Ritz values.')
-c               call svout (logfil, nev, bounds(np+1), ndigit,
-c     &              '_saup2: Ritz estimates of the "wanted" values ')
-c            end if
-c         end if
-
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 0) then
+            call ivout (logfil, 1, nconv, ndigit,
+     &           '_saup2: no. of "converged" Ritz values at this iter.')
+            if (msglvl .gt. 1) then
+               kp(1) = nev
+               kp(2) = np
+               call ivout (logfil, 2, kp, ndigit,
+     &              '_saup2: NEV and NP are')
+               call svout (logfil, nev, ritz(np+1), ndigit,
+     &              '_saup2: "wanted" Ritz values.')
+               call svout (logfil, nev, bounds(np+1), ndigit,
+     &              '_saup2: Ritz estimates of the "wanted" values ')
+            end if
+         end if
+#endif
 c 
          if (ishift .eq. 0) then
 c
@@ -740,18 +740,18 @@ c        | in the exact shift case, ssgets already handles this.   |
 c        %---------------------------------------------------------%
 c
          if (ishift .eq. 0) call scopy (np, workl, 1, ritz, 1)
-c
-c         if (msglvl .gt. 2) then
-c            call ivout (logfil, 1, np, ndigit,
-c     &                  '_saup2: The number of shifts to apply ')
-c            call svout (logfil, np, workl, ndigit,
-c     &                  '_saup2: shifts selected')
-c            if (ishift .eq. 1) then
-c               call svout (logfil, np, bounds, ndigit,
-c     &                  '_saup2: corresponding Ritz estimates')
-c             end if
-c         end if
-c 
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 2) then
+            call ivout (logfil, 1, np, ndigit,
+     &                  '_saup2: The number of shifts to apply ')
+            call svout (logfil, np, workl, ndigit,
+     &                  '_saup2: shifts selected')
+            if (ishift .eq. 1) then
+               call svout (logfil, np, bounds, ndigit,
+     &                  '_saup2: corresponding Ritz estimates')
+             end if
+         end if
+#endif
 c        %---------------------------------------------------------%
 c        | Apply the NP0 implicit shifts by QR bulge chasing.      |
 c        | Each shift is applied to the entire tridiagonal matrix. |
@@ -770,9 +770,13 @@ c        | the first step of the next call to ssaitr.  |
 c        %---------------------------------------------%
 c
          cnorm = .true.
-c         call second (t2)
+#ifdef DEBUG_STAT
+         call second (t2)
+#endif
          if (bmat .eq. 'G') then
-c            nbx = nbx + 1
+#ifdef DEBUG_STAT
+            nbx = nbx + 1
+#endif
             call scopy (n, resid, 1, workd(n+1), 1)
             ipntr(1) = n + 1
             ipntr(2) = 1
@@ -793,12 +797,12 @@ c        %----------------------------------%
 c        | Back from reverse communication; |
 c        | WORKD(1:N) := B*RESID            |
 c        %----------------------------------%
-c
-c         if (bmat .eq. 'G') then
-c            call second (t3)
-c            tmvbx = tmvbx + (t3 - t2)
-c         end if
-c 
+#ifdef DEBUG_STAT
+         if (bmat .eq. 'G') then
+            call second (t3)
+            tmvbx = tmvbx + (t3 - t2)
+         end if
+#endif
          if (bmat .eq. 'G') then         
             rnorm = sdot (n, resid, 1, workd, 1)
             rnorm = sqrt(abs(rnorm))
@@ -807,16 +811,16 @@ c
          end if
          cnorm = .false.
   130    continue
-c
-c         if (msglvl .gt. 2) then
-c            call svout (logfil, 1, rnorm, ndigit, 
-c     &      '_saup2: B-norm of residual for NEV factorization')
-c            call svout (logfil, nev, h(1,2), ndigit,
-c     &           '_saup2: main diagonal of compressed H matrix')
-c            call svout (logfil, nev-1, h(2,1), ndigit,
-c     &           '_saup2: subdiagonal of compressed H matrix')
-c         end if
-c 
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 2) then
+            call svout (logfil, 1, rnorm, ndigit, 
+     &      '_saup2: B-norm of residual for NEV factorization')
+            call svout (logfil, nev, h(1,2), ndigit,
+     &           '_saup2: main diagonal of compressed H matrix')
+            call svout (logfil, nev-1, h(2,1), ndigit,
+     &           '_saup2: subdiagonal of compressed H matrix')
+         end if
+#endif
       go to 1000
 c
 c     %---------------------------------------------------------------%
@@ -836,10 +840,10 @@ c
 c     %------------%
 c     | Error exit |
 c     %------------%
-c
-c      call second (t1)
-c      tsaup2 = t1 - t0
-c 
+#ifdef DEBUG_STAT
+      call second (t1)
+      tsaup2 = t1 - t0
+#endif
  9000 continue
       return
 c

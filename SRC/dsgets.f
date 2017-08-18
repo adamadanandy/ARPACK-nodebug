@@ -95,10 +95,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -147,10 +147,10 @@ c     %-------------------------------%
 c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
-c
-c      call second (t0)
-c      msglvl = msgets
-c 
+#ifdef DEBUG_STAT
+      call second (t0)
+      msglvl = msgets
+#endif
       if (which .eq. 'BE') then
 c
 c        %-----------------------------------------------------%
@@ -197,19 +197,19 @@ c
          call dsortr ('SM', .true., np, bounds, ritz)
          call dcopy (np, ritz, 1, shifts, 1)
       end if
-c 
-c      call second (t1)
-c      tsgets = tsgets + (t1 - t0)
+#ifdef DEBUG_STAT
+      call second (t1)
+      tsgets = tsgets + (t1 - t0)
 c
-c      if (msglvl .gt. 0) then
-c         call ivout (logfil, 1, kev, ndigit, '_sgets: KEV is')
-c         call ivout (logfil, 1, np, ndigit, '_sgets: NP is')
-c         call dvout (logfil, kev+np, ritz, ndigit,
-c     &        '_sgets: Eigenvalues of current H matrix')
-c         call dvout (logfil, kev+np, bounds, ndigit, 
-c     &        '_sgets: Associated Ritz estimates')
-c      end if
-c 
+      if (msglvl .gt. 0) then
+         call ivout (logfil, 1, kev, ndigit, '_sgets: KEV is')
+         call ivout (logfil, 1, np, ndigit, '_sgets: NP is')
+         call dvout (logfil, kev+np, ritz, ndigit,
+     &        '_sgets: Eigenvalues of current H matrix')
+         call dvout (logfil, kev+np, bounds, ndigit, 
+     &        '_sgets: Associated Ritz estimates')
+      end if
+#endif
       return
 c
 c     %---------------%

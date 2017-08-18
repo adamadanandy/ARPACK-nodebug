@@ -179,10 +179,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -257,11 +257,11 @@ c     | Executable Statements |
 c     %-----------------------%
 c
       if (ido .eq. 0) then
+#ifdef DEBUG_STAT 
+         call second (t0)
 c 
-c         call second (t0)
-c 
-c         msglvl = mnaup2
-c 
+         msglvl = mnaup2
+#endif
 c        %-------------------------------------%
 c        | Get the machine dependent constant. |
 c        %-------------------------------------%
@@ -386,12 +386,12 @@ c
  1000 continue
 c
          iter = iter + 1
-c
-c         if (msglvl .gt. 0) then
-c            call ivout (logfil, 1, iter, ndigit, 
-c     &           '_naup2: **** Start of major iteration number ****')
-c         end if
-c 
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 0) then
+            call ivout (logfil, 1, iter, ndigit, 
+     &           '_naup2: **** Start of major iteration number ****')
+         end if
+#endif
 c        %-----------------------------------------------------------%
 c        | Compute NP additional steps of the Arnoldi factorization. |
 c        | Adjust NP since NEV might have been updated by last call  |
@@ -399,14 +399,14 @@ c        | to the shift application routine dnapps.                  |
 c        %-----------------------------------------------------------%
 c
          np  = kplusp - nev
-c
-c         if (msglvl .gt. 1) then
-c            call ivout (logfil, 1, nev, ndigit, 
-c     &     '_naup2: The length of the current Arnoldi factorization')
-c            call ivout (logfil, 1, np, ndigit, 
-c     &           '_naup2: Extend the Arnoldi factorization by')
-c         end if
-c
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 1) then
+            call ivout (logfil, 1, nev, ndigit, 
+     &     '_naup2: The length of the current Arnoldi factorization')
+            call ivout (logfil, 1, np, ndigit, 
+     &           '_naup2: Extend the Arnoldi factorization by')
+         end if
+#endif
 c        %-----------------------------------------------------------%
 c        | Compute NP additional steps of the Arnoldi factorization. |
 c        %-----------------------------------------------------------%
@@ -433,12 +433,12 @@ c
             go to 1200
          end if
          update = .false.
-c
-c         if (msglvl .gt. 1) then
-c            call dvout (logfil, 1, rnorm, ndigit, 
-c     &           '_naup2: Corresponding B-norm of the residual')
-c         end if
-c 
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 1) then
+            call dvout (logfil, 1, rnorm, ndigit, 
+     &           '_naup2: Corresponding B-norm of the residual')
+         end if
+#endif
 c        %--------------------------------------------------------%
 c        | Compute the eigenvalues and corresponding error bounds |
 c        | of the current upper Hessenberg matrix.                |
@@ -488,22 +488,22 @@ c
          call dcopy (nev, bounds(np+1), 1, workl(2*np+1), 1)
          call dnconv (nev, ritzr(np+1), ritzi(np+1), workl(2*np+1), 
      &        tol, nconv)
-c 
-c         if (msglvl .gt. 2) then
-c            kp(1) = nev
-c            kp(2) = np
-c            kp(3) = numcnv
-c            kp(4) = nconv
-c            call ivout (logfil, 4, kp, ndigit, 
-c     &                  '_naup2: NEV, NP, NUMCNV, NCONV are')
-c            call dvout (logfil, kplusp, ritzr, ndigit,
-c     &           '_naup2: Real part of the eigenvalues of H')
-c            call dvout (logfil, kplusp, ritzi, ndigit,
-c     &           '_naup2: Imaginary part of the eigenvalues of H')
-c            call dvout (logfil, kplusp, bounds, ndigit, 
-c     &          '_naup2: Ritz estimates of the current NCV Ritz values')
-c         end if
-c
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 2) then
+            kp(1) = nev
+            kp(2) = np
+            kp(3) = numcnv
+            kp(4) = nconv
+            call ivout (logfil, 4, kp, ndigit, 
+     &                  '_naup2: NEV, NP, NUMCNV, NCONV are')
+            call dvout (logfil, kplusp, ritzr, ndigit,
+     &           '_naup2: Real part of the eigenvalues of H')
+            call dvout (logfil, kplusp, ritzi, ndigit,
+     &           '_naup2: Imaginary part of the eigenvalues of H')
+            call dvout (logfil, kplusp, bounds, ndigit, 
+     &          '_naup2: Ritz estimates of the current NCV Ritz values')
+         end if
+#endif
 c        %---------------------------------------------------------%
 c        | Count the number of unwanted Ritz values that have zero |
 c        | Ritz estimates. If any Ritz estimates are equal to zero |
@@ -525,18 +525,18 @@ c
          if ( (nconv .ge. numcnv) .or. 
      &        (iter .gt. mxiter) .or.
      &        (np .eq. 0) ) then
-c
-c            if (msglvl .gt. 4) then
-c               call dvout(logfil, kplusp, workl(kplusp**2+1), ndigit,
-c     &             '_naup2: Real part of the eig computed by _neigh:')
-c               call dvout(logfil, kplusp, workl(kplusp**2+kplusp+1),
-c     &                     ndigit,
-c     &             '_naup2: Imag part of the eig computed by _neigh:')
-c               call dvout(logfil, kplusp, workl(kplusp**2+kplusp*2+1),
-c     &                     ndigit,
-c     &             '_naup2: Ritz eistmates computed by _neigh:')
-c            end if
-c     
+#ifdef DEBUG_STAT
+            if (msglvl .gt. 4) then
+               call dvout(logfil, kplusp, workl(kplusp**2+1), ndigit,
+     &             '_naup2: Real part of the eig computed by _neigh:')
+               call dvout(logfil, kplusp, workl(kplusp**2+kplusp+1),
+     &                     ndigit,
+     &             '_naup2: Imag part of the eig computed by _neigh:')
+               call dvout(logfil, kplusp, workl(kplusp**2+kplusp*2+1),
+     &                     ndigit,
+     &             '_naup2: Ritz eistmates computed by _neigh:')
+            end if
+#endif     
 c           %------------------------------------------------%
 c           | Prepare to exit. Put the converged Ritz values |
 c           | and corresponding bounds in RITZ(1:NCONV) and  |
@@ -624,16 +624,16 @@ c           | ritzr, ritzi and bound.                        |
 c           %------------------------------------------------%
 c
             call dsortc(which, .true., nconv, ritzr, ritzi, bounds)
-c
-c            if (msglvl .gt. 1) then
-c               call dvout (logfil, kplusp, ritzr, ndigit,
-c     &            '_naup2: Sorted real part of the eigenvalues')
-c               call dvout (logfil, kplusp, ritzi, ndigit,
-c     &            '_naup2: Sorted imaginary part of the eigenvalues')
-c               call dvout (logfil, kplusp, bounds, ndigit,
-c     &            '_naup2: Sorted ritz estimates.')
-c            end if
-c
+#ifdef DEBUG_STAT
+            if (msglvl .gt. 1) then
+               call dvout (logfil, kplusp, ritzr, ndigit,
+     &            '_naup2: Sorted real part of the eigenvalues')
+               call dvout (logfil, kplusp, ritzi, ndigit,
+     &            '_naup2: Sorted imaginary part of the eigenvalues')
+               call dvout (logfil, kplusp, bounds, ndigit,
+     &            '_naup2: Sorted ritz estimates.')
+            end if
+#endif
 c           %------------------------------------%
 c           | Max iterations have been exceeded. | 
 c           %------------------------------------%
@@ -676,24 +676,24 @@ c
      &              bounds, workl, workl(np+1))
 c
          end if              
-c     
-c         if (msglvl .gt. 0) then
-c            call ivout (logfil, 1, nconv, ndigit, 
-c     &           '_naup2: no. of "converged" Ritz values at this iter.')
-c            if (msglvl .gt. 1) then
-c               kp(1) = nev
-c               kp(2) = np
-c               call ivout (logfil, 2, kp, ndigit, 
-c     &              '_naup2: NEV and NP are')
-c               call dvout (logfil, nev, ritzr(np+1), ndigit,
-c     &              '_naup2: "wanted" Ritz values -- real part')
-c               call dvout (logfil, nev, ritzi(np+1), ndigit,
-c     &              '_naup2: "wanted" Ritz values -- imag part')
-c               call dvout (logfil, nev, bounds(np+1), ndigit,
-c     &              '_naup2: Ritz estimates of the "wanted" values ')
-c            end if
-c         end if
-c
+#ifdef DEBUG_STAT    
+         if (msglvl .gt. 0) then
+            call ivout (logfil, 1, nconv, ndigit, 
+     &           '_naup2: no. of "converged" Ritz values at this iter.')
+            if (msglvl .gt. 1) then
+               kp(1) = nev
+               kp(2) = np
+               call ivout (logfil, 2, kp, ndigit, 
+     &              '_naup2: NEV and NP are')
+               call dvout (logfil, nev, ritzr(np+1), ndigit,
+     &              '_naup2: "wanted" Ritz values -- real part')
+               call dvout (logfil, nev, ritzi(np+1), ndigit,
+     &              '_naup2: "wanted" Ritz values -- imag part')
+               call dvout (logfil, nev, bounds(np+1), ndigit,
+     &              '_naup2: Ritz estimates of the "wanted" values ')
+            end if
+         end if
+#endif
          if (ishift .eq. 0) then
 c
 c           %-------------------------------------------------------%
@@ -728,19 +728,19 @@ c
              call dcopy (np, workl,       1, ritzr, 1)
              call dcopy (np, workl(np+1), 1, ritzi, 1)
          end if
-c
-c         if (msglvl .gt. 2) then 
-c            call ivout (logfil, 1, np, ndigit, 
-c     &                  '_naup2: The number of shifts to apply ')
-c            call dvout (logfil, np, ritzr, ndigit,
-c     &                  '_naup2: Real part of the shifts')
-c            call dvout (logfil, np, ritzi, ndigit,
-c     &                  '_naup2: Imaginary part of the shifts')
-c            if ( ishift .eq. 1 ) 
-c     &          call dvout (logfil, np, bounds, ndigit,
-c     &                  '_naup2: Ritz estimates of the shifts')
-c         end if
-c
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 2) then 
+            call ivout (logfil, 1, np, ndigit, 
+     &                  '_naup2: The number of shifts to apply ')
+            call dvout (logfil, np, ritzr, ndigit,
+     &                  '_naup2: Real part of the shifts')
+            call dvout (logfil, np, ritzi, ndigit,
+     &                  '_naup2: Imaginary part of the shifts')
+            if ( ishift .eq. 1 ) 
+     &          call dvout (logfil, np, bounds, ndigit,
+     &                  '_naup2: Ritz estimates of the shifts')
+         end if
+#endif
 c        %---------------------------------------------------------%
 c        | Apply the NP implicit shifts by QR bulge chasing.       |
 c        | Each shift is applied to the whole upper Hessenberg     |
@@ -758,9 +758,13 @@ c        | the first step of the next call to dnaitr.  |
 c        %---------------------------------------------%
 c
          cnorm = .true.
-c         call second (t2)
+#ifdef DEBUG_STAT
+         call second (t2)
+#endif
          if (bmat .eq. 'G') then
-c            nbx = nbx + 1
+#ifdef DEBUG_STAT
+            nbx = nbx + 1
+#endif
             call dcopy (n, resid, 1, workd(n+1), 1)
             ipntr(1) = n + 1
             ipntr(2) = 1
@@ -781,12 +785,12 @@ c        %----------------------------------%
 c        | Back from reverse communication; |
 c        | WORKD(1:N) := B*RESID            |
 c        %----------------------------------%
-c
-c         if (bmat .eq. 'G') then
-c            call second (t3)
-c            tmvbx = tmvbx + (t3 - t2)
-c         end if
-c 
+#ifdef DEBUG_STAT
+         if (bmat .eq. 'G') then
+            call second (t3)
+            tmvbx = tmvbx + (t3 - t2)
+         end if
+#endif 
          if (bmat .eq. 'G') then         
             rnorm = ddot (n, resid, 1, workd, 1)
             rnorm = sqrt(abs(rnorm))
@@ -794,14 +798,14 @@ c
             rnorm = dnrm2(n, resid, 1)
          end if
          cnorm = .false.
-cc
-c         if (msglvl .gt. 2) then
-c            call dvout (logfil, 1, rnorm, ndigit, 
-c     &      '_naup2: B-norm of residual for compressed factorization')
-c            call dmout (logfil, nev, nev, h, ldh, ndigit,
-c     &        '_naup2: Compressed upper Hessenberg matrix H')
-c         end if
-c 
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 2) then
+            call dvout (logfil, 1, rnorm, ndigit, 
+     &      '_naup2: B-norm of residual for compressed factorization')
+            call dmout (logfil, nev, nev, h, ldh, ndigit,
+     &        '_naup2: Compressed upper Hessenberg matrix H')
+         end if
+#endif
       go to 1000
 c
 c     %---------------------------------------------------------------%
@@ -821,10 +825,10 @@ c
 c     %------------%
 c     | Error Exit |
 c     %------------%
-c
-c      call second (t1)
-c      tnaup2 = t1 - t0
-c     
+#ifdef DEBUG_STAT
+      call second (t1)
+      tnaup2 = t1 - t0
+#endif     
  9000 continue
 c
 c     %---------------%

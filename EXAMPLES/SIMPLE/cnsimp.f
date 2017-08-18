@@ -154,7 +154,7 @@ c     | most useful information will be a breakdown of  |
 c     | time spent in the various stages of computation |
 c     | given by setting mcaupd = 1                     |
 c     %-------------------------------------------------%
-c
+#ifdef DEBUG_STAT
       include 'debug.h'
       ndigit = -3
       logfil = 6
@@ -164,7 +164,7 @@ c
       mcaup2 = 0
       mceigh = 0
       mceupd = 0
-c
+#endif
 c     %-------------------------------------------------%
 c     | The following sets dimensions for this problem. |
 c     %-------------------------------------------------%
@@ -416,8 +416,10 @@ c            %-----------------------------%
 c            | Display computed residuals. |
 c            %-----------------------------%
 c
+#ifdef DEBUG_STAT
              call smout(6, nconv, 3, rd, maxncv, -6,
      &            'Ritz values (Real, Imag) and relative residuals')
+#endif
          end if
 c
 c        %-------------------------------------------%

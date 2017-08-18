@@ -147,10 +147,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -236,9 +236,10 @@ c     %-------------------------------%
 c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
-c
-c      call second (t0)
-c      msglvl = mnapps
+#ifdef DEBUG_STAT
+      call second (t0)
+      msglvl = mnapps
+#endif
       kplusp = kev + np 
 c 
 c     %--------------------------------------------%
@@ -264,16 +265,16 @@ c
       do 110 jj = 1, np
          sigmar = shiftr(jj)
          sigmai = shifti(jj)
-c
-c         if (msglvl .gt. 2 ) then
-c            call ivout (logfil, 1, jj, ndigit, 
-c     &               '_napps: shift number.')
-c            call dvout (logfil, 1, sigmar, ndigit, 
-c     &               '_napps: The real part of the shift ')
-c            call dvout (logfil, 1, sigmai, ndigit, 
-c     &               '_napps: The imaginary part of the shift ')
-c         end if
-c
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 2 ) then
+            call ivout (logfil, 1, jj, ndigit, 
+     &               '_napps: shift number.')
+            call dvout (logfil, 1, sigmar, ndigit, 
+     &               '_napps: The real part of the shift ')
+            call dvout (logfil, 1, sigmai, ndigit, 
+     &               '_napps: The imaginary part of the shift ')
+         end if
+#endif
 c        %-------------------------------------------------%
 c        | The following set of conditionals is necessary  |
 c        | in order that complex conjugate pairs of shifts |
@@ -334,14 +335,16 @@ c
             if( tst1.eq.zero )
      &         tst1 = dlanhs( '1', kplusp-jj+1, h, ldh, workl )
             if( abs( h( i+1,i ) ).le.max( ulp*tst1, smlnum ) ) then
-c               if (msglvl .gt. 0) then
-c                  call ivout (logfil, 1, i, ndigit, 
-c     &                 '_napps: matrix splitting at row/column no.')
-c                  call ivout (logfil, 1, jj, ndigit, 
-c     &                 '_napps: matrix splitting with shift number.')
-c                  call dvout (logfil, 1, h(i+1,i), ndigit, 
-c     &                 '_napps: off diagonal element.')
-c               end if
+#ifdef DEBUG_STAT
+               if (msglvl .gt. 0) then
+                  call ivout (logfil, 1, i, ndigit, 
+     &                 '_napps: matrix splitting at row/column no.')
+                  call ivout (logfil, 1, jj, ndigit, 
+     &                 '_napps: matrix splitting with shift number.')
+                  call dvout (logfil, 1, h(i+1,i), ndigit, 
+     &                 '_napps: off diagonal element.')
+               end if
+#endif
                iend = i
                h(i+1,i) = zero
                go to 40
@@ -349,14 +352,14 @@ c               end if
    30    continue
          iend = kplusp
    40    continue
-c
-c         if (msglvl .gt. 2) then
-c             call ivout (logfil, 1, istart, ndigit, 
-c     &                   '_napps: Start of current block ')
-c             call ivout (logfil, 1, iend, ndigit, 
-c     &                   '_napps: End of current block ')
-c         end if
-c
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 2) then
+             call ivout (logfil, 1, istart, ndigit, 
+     &                   '_napps: Start of current block ')
+             call ivout (logfil, 1, iend, ndigit, 
+     &                   '_napps: End of current block ')
+         end if
+#endif
 c        %------------------------------------------------%
 c        | No reason to apply a shift to block of order 1 |
 c        %------------------------------------------------%
@@ -619,25 +622,26 @@ c
       call dscal (n, q(kplusp,kev), resid, 1)
       if (h(kev+1,kev) .gt. zero)
      &   call daxpy (n, h(kev+1,kev), v(1,kev+1), 1, resid, 1)
+#ifdef DEBUG_STAT
+      if (msglvl .gt. 1) then
+         call dvout (logfil, 1, q(kplusp,kev), ndigit,
+     &        '_napps: sigmak = (e_{kev+p}^T*Q)*e_{kev}')
+         call dvout (logfil, 1, h(kev+1,kev), ndigit,
+     &        '_napps: betak = e_{kev+1}^T*H*e_{kev}')
+         call ivout (logfil, 1, kev, ndigit, 
+     &               '_napps: Order of the final Hessenberg matrix ')
+         if (msglvl .gt. 2) then
+            call dmout (logfil, kev, kev, h, ldh, ndigit,
+     &      '_napps: updated Hessenberg matrix H for next iteration')
+         end if
 c
-c      if (msglvl .gt. 1) then
-c         call dvout (logfil, 1, q(kplusp,kev), ndigit,
-c     &        '_napps: sigmak = (e_{kev+p}^T*Q)*e_{kev}')
-c         call dvout (logfil, 1, h(kev+1,kev), ndigit,
-c     &        '_napps: betak = e_{kev+1}^T*H*e_{kev}')
-c         call ivout (logfil, 1, kev, ndigit, 
-c     &               '_napps: Order of the final Hessenberg matrix ')
-c         if (msglvl .gt. 2) then
-c            call dmout (logfil, kev, kev, h, ldh, ndigit,
-c     &      '_napps: updated Hessenberg matrix H for next iteration')
-c         end if
-c
-c      end if
-c 
+      end if
+#endif
  9000 continue
-c      call second (t1)
-c      tnapps = tnapps + (t1 - t0)
-c 
+#ifdef DEBUG_STAT
+      call second (t1)
+      tnapps = tnapps + (t1 - t0)
+#endif
       return
 c
 c     %---------------%

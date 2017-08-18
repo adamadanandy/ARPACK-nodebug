@@ -212,10 +212,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -325,10 +325,10 @@ c        %-------------------------------%
 c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
-c
-c         call second (t0)
-c         msglvl = mcaitr
-c 
+#ifdef DEBUG_STAT
+         call second (t0)
+         msglvl = mcaitr
+#endif 
 c        %------------------------------%
 c        | Initial call to this routine |
 c        %------------------------------%
@@ -376,14 +376,14 @@ c     | Note:  B*r_{j-1} is already in WORKD(1:N)=WORKD(IPJ:IPJ+N-1) |
 c     %--------------------------------------------------------------%
  
  1000 continue
-c
-c         if (msglvl .gt. 1) then
-c            call ivout (logfil, 1, j, ndigit, 
-c     &                  '_naitr: generating Arnoldi vector number')
-c            call svout (logfil, 1, rnorm, ndigit, 
-c     &                  '_naitr: B-norm of the current residual is')
-c         end if
-c 
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 1) then
+            call ivout (logfil, 1, j, ndigit, 
+     &                  '_naitr: generating Arnoldi vector number')
+            call svout (logfil, 1, rnorm, ndigit, 
+     &                  '_naitr: B-norm of the current residual is')
+         end if
+#endif 
 c        %---------------------------------------------------%
 c        | STEP 1: Check if the B norm of j-th residual      |
 c        | vector is zero. Equivalent to determine whether   |
@@ -398,12 +398,12 @@ c           | Invariant subspace found, generate a new starting |
 c           | vector which is orthogonal to the current Arnoldi |
 c           | basis and continue the iteration.                 |
 c           %---------------------------------------------------%
-c
-c            if (msglvl .gt. 0) then
-c               call ivout (logfil, 1, j, ndigit,
-c     &                     '_naitr: ****** RESTART AT STEP ******')
-c            end if
-c 
+#ifdef DEBUG_STAT
+            if (msglvl .gt. 0) then
+               call ivout (logfil, 1, j, ndigit,
+     &                     '_naitr: ****** RESTART AT STEP ******')
+            end if
+#endif 
 c           %---------------------------------------------%
 c           | ITRY is the loop variable that controls the |
 c           | maximum amount of times that a restart is   |
@@ -411,7 +411,9 @@ c           | attempted. NRSTRT is used by stat.h         |
 c           %---------------------------------------------%
 c 
             betaj  = rzero
-c            nrstrt = nrstrt + 1
+#ifdef DEBUG_STAT
+            nrstrt = nrstrt + 1
+#endif
             itry   = 1
    20       continue
             rstart = .true.
@@ -437,8 +439,10 @@ c              | which spans OP and exit.                       |
 c              %------------------------------------------------%
 c
                info = j - 1
-c               call second (t1)
-c               tcaitr = tcaitr + (t1 - t0)
+#ifdef DEBUG_STAT
+               call second (t1)
+               tcaitr = tcaitr + (t1 - t0)
+#endif
                ido = 99
                go to 9000
             end if
@@ -476,8 +480,10 @@ c        | Note that this is not quite yet r_{j}. See STEP 4    |
 c        %------------------------------------------------------%
 c
          step3 = .true.
-c         nopx  = nopx + 1
-c         call second (t2)
+#ifdef DEBUG_STAT
+         nopx  = nopx + 1
+         call second (t2)
+#endif
          call ccopy (n, v(1,j), 1, workd(ivj), 1)
          ipntr(1) = ivj
          ipntr(2) = irj
@@ -496,10 +502,10 @@ c        | Back from reverse communication; |
 c        | WORKD(IRJ:IRJ+N-1) := OP*v_{j}   |
 c        | if step3 = .true.                |
 c        %----------------------------------%
-c
-c         call second (t3)
-c         tmvopx = tmvopx + (t3 - t2)
- 
+#ifdef DEBUG_STAT
+         call second (t3)
+         tmvopx = tmvopx + (t3 - t2)
+#endif 
          step3 = .false.
 c
 c        %------------------------------------------%
@@ -512,10 +518,13 @@ c        %---------------------------------------%
 c        | STEP 4:  Finish extending the Arnoldi |
 c        |          factorization to length j.   |
 c        %---------------------------------------%
-c
-c         call second (t2)
+#ifdef DEBUG_STAT
+         call second (t2)
+#endif
          if (bmat .eq. 'G') then
-c            nbx = nbx + 1
+#ifdef DEBUG_STAT
+            nbx = nbx + 1
+#endif
             step4 = .true.
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -536,11 +545,12 @@ c        | Back from reverse communication; |
 c        | WORKD(IPJ:IPJ+N-1) := B*OP*v_{j} |
 c        | if step4 = .true.                |
 c        %----------------------------------%
-c
-c         if (bmat .eq. 'G') then
-c            call second (t3)
-c            tmvbx = tmvbx + (t3 - t2)
-c         end if
+#ifdef DEBUG_STAT
+         if (bmat .eq. 'G') then
+            call second (t3)
+            tmvbx = tmvbx + (t3 - t2)
+         end if
+#endif
 c 
          step4 = .false.
 c
@@ -582,14 +592,17 @@ c
      &               one, resid, 1)
 c
          if (j .gt. 1) h(j,j-1) = cmplx(betaj, rzero)
-c
-c         call second (t4)
-c 
+#ifdef DEBUG_STAT
+         call second (t4)
+#endif 
          orth1 = .true.
-c 
-c         call second (t2)
+#ifdef DEBUG_STAT 
+         call second (t2)
+#endif
          if (bmat .eq. 'G') then
-c            nbx = nbx + 1
+#ifdef DEBUG_STAT
+            nbx = nbx + 1
+#endif
             call ccopy (n, resid, 1, workd(irj), 1)
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -609,12 +622,12 @@ c        %---------------------------------------------------%
 c        | Back from reverse communication if ORTH1 = .true. |
 c        | WORKD(IPJ:IPJ+N-1) := B*r_{j}.                    |
 c        %---------------------------------------------------%
-c
-c         if (bmat .eq. 'G') then
-c            call second (t3)
-c            tmvbx = tmvbx + (t3 - t2)
-c         end if
-c 
+#ifdef DEBUG_STAT
+         if (bmat .eq. 'G') then
+            call second (t3)
+            tmvbx = tmvbx + (t3 - t2)
+         end if
+#endif 
          orth1 = .false.
 c
 c        %------------------------------%
@@ -649,7 +662,9 @@ c
          if ( rnorm .gt. 0.717*wnorm ) go to 100
 c
          iter  = 0
-c         nrorth = nrorth + 1
+#ifdef DEBUG_STAT
+         nrorth = nrorth + 1
+#endif
 c 
 c        %---------------------------------------------------%
 c        | Enter the Iterative refinement phase. If further  |
@@ -659,16 +674,16 @@ c        | Gram-Schmidt using all the Arnoldi vectors V_{j}  |
 c        %---------------------------------------------------%
 c 
    80    continue
-c
-c         if (msglvl .gt. 2) then
-c            rtemp(1) = wnorm
-c            rtemp(2) = rnorm
-c            call svout (logfil, 2, rtemp, ndigit, 
-c     &      '_naitr: re-orthogonalization; wnorm and rnorm are')
-c            call cvout (logfil, j, h(1,j), ndigit,
-c     &                  '_naitr: j-th column of H')
-c         end if
-c
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 2) then
+            rtemp(1) = wnorm
+            rtemp(2) = rnorm
+            call svout (logfil, 2, rtemp, ndigit, 
+     &      '_naitr: re-orthogonalization; wnorm and rnorm are')
+            call cvout (logfil, j, h(1,j), ndigit,
+     &                  '_naitr: j-th column of H')
+         end if
+#endif
 c        %----------------------------------------------------%
 c        | Compute V_{j}^T * B * r_{j}.                       |
 c        | WORKD(IRJ:IRJ+J-1) = v(:,1:J)'*WORKD(IPJ:IPJ+N-1). |
@@ -689,9 +704,13 @@ c
          call caxpy (j, one, workd(irj), 1, h(1,j), 1)
 c 
          orth2 = .true.
-c         call second (t2)
+#ifdef DEBUG_STAT
+         call second (t2)
+#endif
          if (bmat .eq. 'G') then
-c            nbx = nbx + 1
+#ifdef DEBUG_STAT
+            nbx = nbx + 1
+#endif
             call ccopy (n, resid, 1, workd(irj), 1)
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -711,12 +730,12 @@ c
 c        %---------------------------------------------------%
 c        | Back from reverse communication if ORTH2 = .true. |
 c        %---------------------------------------------------%
-c
-c         if (bmat .eq. 'G') then
-c            call second (t3)
-c            tmvbx = tmvbx + (t3 - t2)
-c         end if 
-c
+#ifdef DEBUG_STAT
+         if (bmat .eq. 'G') then
+            call second (t3)
+            tmvbx = tmvbx + (t3 - t2)
+         end if 
+#endif
 c        %-----------------------------------------------------%
 c        | Compute the B-norm of the corrected residual r_{j}. |
 c        %-----------------------------------------------------%
@@ -727,18 +746,18 @@ c
          else if (bmat .eq. 'I') then
              rnorm1 = scnrm2(n, resid, 1)
          end if
-c 
-c         if (msglvl .gt. 0 .and. iter .gt. 0 ) then
-c            call ivout (logfil, 1, j, ndigit,
-c     &           '_naitr: Iterative refinement for Arnoldi residual')
-c            if (msglvl .gt. 2) then
-c                rtemp(1) = rnorm
-c                rtemp(2) = rnorm1
-c                call svout (logfil, 2, rtemp, ndigit,
-c     &           '_naitr: iterative refinement ; rnorm and rnorm1 are')
-c            end if
-c         end if
-c
+#ifdef DEBUG_STAT 
+         if (msglvl .gt. 0 .and. iter .gt. 0 ) then
+            call ivout (logfil, 1, j, ndigit,
+     &           '_naitr: Iterative refinement for Arnoldi residual')
+            if (msglvl .gt. 2) then
+                rtemp(1) = rnorm
+                rtemp(2) = rnorm1
+                call svout (logfil, 2, rtemp, ndigit,
+     &           '_naitr: iterative refinement ; rnorm and rnorm1 are')
+            end if
+         end if
+#endif
 c        %-----------------------------------------%
 c        | Determine if we need to perform another |
 c        | step of re-orthogonalization.           |
@@ -764,8 +783,9 @@ c           %-------------------------------------------%
 c           | Another step of iterative refinement step |
 c           | is required. NITREF is used by stat.h     |
 c           %-------------------------------------------%
-c
-c            nitref = nitref + 1
+#ifdef DEBUG_STAT
+            nitref = nitref + 1
+#endif
             rnorm  = rnorm1
             iter   = iter + 1
             if (iter .le. 1) go to 80
@@ -790,18 +810,20 @@ c
 c 
          rstart = .false.
          orth2  = .false.
-c 
-c         call second (t5)
-c         titref = titref + (t5 - t4)
-c 
+#ifdef DEBUG_STAT 
+         call second (t5)
+         titref = titref + (t5 - t4)
+#endif 
 c        %------------------------------------%
 c        | STEP 6: Update  j = j+1;  Continue |
 c        %------------------------------------%
 c
          j = j + 1
          if (j .gt. k+np) then
-c            call second (t1)
-c            tcaitr = tcaitr + (t1 - t0)
+#ifdef DEBUG_STAT
+            call second (t1)
+            tcaitr = tcaitr + (t1 - t0)
+#endif
             ido = 99
             do 110 i = max(1,k), k+np-1
 c     
@@ -819,12 +841,12 @@ c
      &                    max( ulp*tst1, smlnum ) ) 
      &             h(i+1,i) = zero
  110        continue
-c     
-c            if (msglvl .gt. 2) then
-c               call cmout (logfil, k+np, k+np, h, ldh, ndigit, 
-c     &          '_naitr: Final upper Hessenberg matrix H of order K+NP')
-c            end if
-c     
+#ifdef DEBUG_STAT     
+            if (msglvl .gt. 2) then
+               call cmout (logfil, k+np, k+np, h, ldh, ndigit, 
+     &          '_naitr: Final upper Hessenberg matrix H of order K+NP')
+            end if
+#endif     
             go to 9000
          end if
 c

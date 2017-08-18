@@ -1,3 +1,4 @@
+DEBUG = n
 ###########################################################################
 #
 #  Program:         ARPACK
@@ -50,9 +51,11 @@ SRCdir       = $(home)/SRC
 # | if you already have the BLAS and LAPACK installed on your system. |
 # | NOTE: ARPACK assumes the use of LAPACK version 2 codes.           |
 # %-------------------------------------------------------------------%
-#
-#DIRS         = $(UTILdir) $(SRCdir)
-DIRS         = $(SRCdir)
+ifeq ($DEBUG,y)
+  DIRS         = $(UTILdir) $(SRCdir)
+else
+  DIRS         = $(SRCdir)
+endif
 #
 # %---------------------------------------------------%
 # | The name of the libraries to be created/linked to |
@@ -103,7 +106,7 @@ ALIBS =  $(ARPACKLIB) $(LAPACKLIB) $(BLASLIB)
 # %-----------------------------------------%
 #
 FC      = ifort
-FFLAGS	= -O3
+FFLAGS	= -O3 -fpp
 
 LDFLAGS = 
 CD      = cd

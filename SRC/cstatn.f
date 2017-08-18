@@ -12,36 +12,36 @@ c
 c     %--------------------------------%
 c     | See stat.doc for documentation |
 c     %--------------------------------%
-c
-c      include   'stat.h'
+#ifdef DEBUG_STAT
+      include   'stat.h'
  
 c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
 
-c      nopx   = 0
-c      nbx    = 0
-c      nrorth = 0
-c      nitref = 0
-c      nrstrt = 0
+      nopx   = 0
+      nbx    = 0
+      nrorth = 0
+      nitref = 0
+      nrstrt = 0
  
-c      tcaupd = 0.0E+0
-c      tcaup2 = 0.0E+0
-c      tcaitr = 0.0E+0
-c      tceigh = 0.0E+0
-c      tcgets = 0.0E+0
-c      tcapps = 0.0E+0
-c      tcconv = 0.0E+0
-c      titref = 0.0E+0
-c      tgetv0 = 0.0E+0
-c      trvec  = 0.0E+0
+      tcaupd = 0.0E+0
+      tcaup2 = 0.0E+0
+      tcaitr = 0.0E+0
+      tceigh = 0.0E+0
+      tcgets = 0.0E+0
+      tcapps = 0.0E+0
+      tcconv = 0.0E+0
+      titref = 0.0E+0
+      tgetv0 = 0.0E+0
+      trvec  = 0.0E+0
  
 c     %----------------------------------------------------%
 c     | User time including reverse communication overhead |
 c     %----------------------------------------------------%
-c      tmvopx = 0.0E+0
-c      tmvbx  = 0.0E+0
- 
+      tmvopx = 0.0E+0
+      tmvbx  = 0.0E+0
+#endif 
       return
 c
 c     %---------------%

@@ -98,10 +98,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -151,10 +151,10 @@ c     %-------------------------------%
 c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
-c 
-c      call second (t0)
-c      msglvl = mngets
-c 
+#ifdef DEBUG_STAT
+      call second (t0)
+      msglvl = mngets
+#endif
 c     %----------------------------------------------------%
 c     | LM, SM, LR, SR, LI, SI case.                       |
 c     | Sort the eigenvalues of H into the desired order   |
@@ -207,21 +207,21 @@ c        %-------------------------------------------------------%
 c     
          call ssortc ( 'SR', .true., np, bounds, ritzr, ritzi )
       end if
-c     
-c      call second (t1)
-c      tngets = tngets + (t1 - t0)
+#ifdef DEBUG_STAT
+      call second (t1)
+      tngets = tngets + (t1 - t0)
 c
-c      if (msglvl .gt. 0) then
-c         call ivout (logfil, 1, kev, ndigit, '_ngets: KEV is')
-c         call ivout (logfil, 1, np, ndigit, '_ngets: NP is')
-c         call svout (logfil, kev+np, ritzr, ndigit,
-c     &        '_ngets: Eigenvalues of current H matrix -- real part')
-c         call svout (logfil, kev+np, ritzi, ndigit,
-c     &        '_ngets: Eigenvalues of current H matrix -- imag part')
-c         call svout (logfil, kev+np, bounds, ndigit, 
-c     &      '_ngets: Ritz estimates of the current KEV+NP Ritz values')
-c      end if
-c     
+      if (msglvl .gt. 0) then
+         call ivout (logfil, 1, kev, ndigit, '_ngets: KEV is')
+         call ivout (logfil, 1, np, ndigit, '_ngets: NP is')
+         call svout (logfil, kev+np, ritzr, ndigit,
+     &        '_ngets: Eigenvalues of current H matrix -- real part')
+         call svout (logfil, kev+np, ritzi, ndigit,
+     &        '_ngets: Eigenvalues of current H matrix -- imag part')
+         call svout (logfil, kev+np, bounds, ndigit, 
+     &      '_ngets: Ritz estimates of the current KEV+NP Ritz values')
+      end if
+#endif
       return
 c     
 c     %---------------%

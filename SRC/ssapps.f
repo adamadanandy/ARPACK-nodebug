@@ -134,10 +134,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -212,10 +212,10 @@ c     %-------------------------------%
 c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
-c
-c      call second (t0)
-c      msglvl = msapps
-c 
+#ifdef DEBUG_STAT
+      call second (t0)
+      msglvl = msapps
+#endif
       kplusp = kev + np 
 c 
 c     %----------------------------------------------%
@@ -260,14 +260,16 @@ c
          do 30 i = istart, kplusp-1
             big   = abs(h(i,2)) + abs(h(i+1,2))
             if (h(i+1,1) .le. epsmch*big) then
-c               if (msglvl .gt. 0) then
-c                  call ivout (logfil, 1, i, ndigit, 
-c     &                 '_sapps: deflation at row/column no.')
-c                  call ivout (logfil, 1, jj, ndigit, 
-c     &                 '_sapps: occured before shift number.')
-c                  call svout (logfil, 1, h(i+1,1), ndigit, 
-c     &                 '_sapps: the corresponding off diagonal element')
-c               end if
+#ifdef DEBUG_STAT
+               if (msglvl .gt. 0) then
+                  call ivout (logfil, 1, i, ndigit, 
+     &                 '_sapps: deflation at row/column no.')
+                  call ivout (logfil, 1, jj, ndigit, 
+     &                 '_sapps: occured before shift number.')
+                  call svout (logfil, 1, h(i+1,1), ndigit, 
+     &                 '_sapps: the corresponding off diagonal element')
+               end if
+#endif
                h(i+1,1) = zero
                iend = i
                go to 40
@@ -431,12 +433,14 @@ c
       do 100 i = itop, kplusp-1
          big   = abs(h(i,2)) + abs(h(i+1,2))
          if (h(i+1,1) .le. epsmch*big) then
-c            if (msglvl .gt. 0) then
-c               call ivout (logfil, 1, i, ndigit, 
-c     &              '_sapps: deflation at row/column no.')
-c               call svout (logfil, 1, h(i+1,1), ndigit, 
-c     &              '_sapps: the corresponding off diagonal element')
-c            end if
+#ifdef DEBUG_STAT
+            if (msglvl .gt. 0) then
+               call ivout (logfil, 1, i, ndigit, 
+     &              '_sapps: deflation at row/column no.')
+               call svout (logfil, 1, h(i+1,1), ndigit, 
+     &              '_sapps: the corresponding off diagonal element')
+            end if
+#endif
             h(i+1,1) = zero
          end if
  100  continue
@@ -489,23 +493,23 @@ c
       call sscal (n, q(kplusp,kev), resid, 1)
       if (h(kev+1,1) .gt. zero) 
      &   call saxpy (n, h(kev+1,1), v(1,kev+1), 1, resid, 1)
+#ifdef DEBUG_STAT
+      if (msglvl .gt. 1) then
+         call svout (logfil, 1, q(kplusp,kev), ndigit, 
+     &      '_sapps: sigmak of the updated residual vector')
+         call svout (logfil, 1, h(kev+1,1), ndigit, 
+     &      '_sapps: betak of the updated residual vector')
+         call svout (logfil, kev, h(1,2), ndigit, 
+     &      '_sapps: updated main diagonal of H for next iteration')
+         if (kev .gt. 1) then
+         call svout (logfil, kev-1, h(2,1), ndigit, 
+     &      '_sapps: updated sub diagonal of H for next iteration')
+         end if
+      end if
 c
-c      if (msglvl .gt. 1) then
-c         call svout (logfil, 1, q(kplusp,kev), ndigit, 
-c     &      '_sapps: sigmak of the updated residual vector')
-c         call svout (logfil, 1, h(kev+1,1), ndigit, 
-c     &      '_sapps: betak of the updated residual vector')
-c         call svout (logfil, kev, h(1,2), ndigit, 
-c     &      '_sapps: updated main diagonal of H for next iteration')
-c         if (kev .gt. 1) then
-c         call svout (logfil, kev-1, h(2,1), ndigit, 
-c     &      '_sapps: updated sub diagonal of H for next iteration')
-c         end if
-c      end if
-c
-c      call second (t1)
-c      tsapps = tsapps + (t1 - t0)
-c 
+      call second (t1)
+      tsapps = tsapps + (t1 - t0)
+#endif
  9000 continue 
       return
 c

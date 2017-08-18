@@ -363,8 +363,10 @@ c           %-----------------------------%
 c           | Display computed residuals. |
 c           %-----------------------------%
 c
+#ifdef DEBUG_STAT
             call dmout(6, nconv, 2, d, maxncv, -6,
      &           'Ritz values and relative residuals')
+#endif
          end if
 c
 c        %------------------------------------------%

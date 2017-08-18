@@ -187,7 +187,7 @@ c     | most useful information will be a breakdown of  |
 c     | time spent in the various stages of computation |
 c     | given by setting msaupd = 1.                    |
 c     %-------------------------------------------------%
-c
+#ifdef DEBUG_STAT
       include 'debug.h'
       ndigit = -3
       logfil = 6
@@ -198,7 +198,7 @@ c
       msaup2 = 0
       mseigt = 0
       mseupd = 0
-c
+#endif
 c     %-------------------------------------------------%
 c     | The following sets dimensions for this problem. |
 c     %-------------------------------------------------%
@@ -455,8 +455,10 @@ c           %-------------------------------%
 c           | Display computed residuals    |
 c           %-------------------------------%
 c
+#ifdef DEBUG_STAT
             call smout(6, nconv, 2, s, maxncv, -6,
      &                'Singular values and direct residuals')
+#endif
          end if
 c
 c        %------------------------------------------%

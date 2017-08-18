@@ -255,10 +255,10 @@ c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
-c
-c      include   'debug.h'
-c      include   'stat.h'
-c
+#ifdef DEBUG_STAT
+      include   'debug.h'
+      include   'stat.h'
+#endif
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -335,8 +335,9 @@ c
 c     %------------------------%
 c     | Set default parameters |
 c     %------------------------%
-c
-c      msglvl = mceupd
+#ifdef DEBUG_STAT
+      msglvl = mceupd
+#endif
       mode = iparam(7)
       nconv = iparam(5)
       info = 0
@@ -463,14 +464,14 @@ c     %------------------------------------%
 c
       rnorm = workl(ih+2)
       workl(ih+2) = zero
-c
-c      if (msglvl .gt. 2) then
-c         call cvout(logfil, ncv, workl(irz), ndigit,
-c     &   '_neupd: Ritz values passed in from _NAUPD.')
-c         call cvout(logfil, ncv, workl(ibd), ndigit,
-c     &   '_neupd: Ritz estimates passed in from _NAUPD.')
-c      end if
-c
+#ifdef DEBUG_STAT
+      if (msglvl .gt. 2) then
+         call cvout(logfil, ncv, workl(irz), ndigit,
+     &   '_neupd: Ritz values passed in from _NAUPD.')
+         call cvout(logfil, ncv, workl(ibd), ndigit,
+     &   '_neupd: Ritz estimates passed in from _NAUPD.')
+      end if
+#endif
       if (rvec) then
 c
          reord = .false.
@@ -499,14 +500,14 @@ c
          ishift = 0
          call cngets(ishift, which     , nev          ,
      &                np    , workl(irz), workl(bounds))
-c
-c         if (msglvl .gt. 2) then
-c            call cvout (logfil, ncv, workl(irz), ndigit,
-c     &      '_neupd: Ritz values after calling _NGETS.')
-c            call cvout (logfil, ncv, workl(bounds), ndigit,
-c     &      '_neupd: Ritz value indices after calling _NGETS.')
-c         end if
-c
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 2) then
+            call cvout (logfil, ncv, workl(irz), ndigit,
+     &      '_neupd: Ritz values after calling _NGETS.')
+            call cvout (logfil, ncv, workl(bounds), ndigit,
+     &      '_neupd: Ritz value indices after calling _NGETS.')
+         end if
+#endif
 c        %-----------------------------------------------------%
 c        | Record indices of the converged wanted Ritz values  |
 c        | Mark the select array for possible reordering       |
@@ -534,14 +535,14 @@ c        | the number (nconv) reported by dnaupd.  If these two      |
 c        | are different then there has probably been an error       |
 c        | caused by incorrect passing of the dnaupd data.           |
 c        %-----------------------------------------------------------%
-c
-c         if (msglvl .gt. 2) then
-c             call ivout(logfil, 1, numcnv, ndigit,
-c     &            '_neupd: Number of specified eigenvalues')
-c             call ivout(logfil, 1, nconv, ndigit,
-c     &            '_neupd: Number of "converged" eigenvalues')
-c         end if
-c
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 2) then
+             call ivout(logfil, 1, numcnv, ndigit,
+     &            '_neupd: Number of specified eigenvalues')
+             call ivout(logfil, 1, nconv, ndigit,
+     &            '_neupd: Number of "converged" eigenvalues')
+         end if
+#endif
          if (numcnv .ne. nconv) then
             info = -15
             go to 9000
@@ -570,19 +571,19 @@ c
             info = -8
             go to 9000
          end if
-c
-c         if (msglvl .gt. 1) then
-c            call cvout (logfil, ncv, workl(iheig), ndigit,
-c     &           '_neupd: Eigenvalues of H')
-c            call cvout (logfil, ncv, workl(ihbds), ndigit,
-c     &           '_neupd: Last row of the Schur vector matrix')
-c            if (msglvl .gt. 3) then
-c               call cmout (logfil       , ncv, ncv   , 
-c     &                     workl(iuptri), ldh, ndigit,
-c     &              '_neupd: The upper triangular matrix ')
-c            end if
-c         end if
-c
+#ifdef DEBUG_STAT
+         if (msglvl .gt. 1) then
+            call cvout (logfil, ncv, workl(iheig), ndigit,
+     &           '_neupd: Eigenvalues of H')
+            call cvout (logfil, ncv, workl(ihbds), ndigit,
+     &           '_neupd: Last row of the Schur vector matrix')
+            if (msglvl .gt. 3) then
+               call cmout (logfil       , ncv, ncv   , 
+     &                     workl(iuptri), ldh, ndigit,
+     &              '_neupd: The upper triangular matrix ')
+            end if
+         end if
+#endif
          if (reord) then
 c
 c           %-----------------------------------------------%
@@ -599,17 +600,17 @@ c
                info = 1
                go to 9000
             end if
-c
-c            if (msglvl .gt. 2) then
-c                call cvout (logfil, ncv, workl(iheig), ndigit,
-c     &           '_neupd: Eigenvalues of H--reordered')
-c                if (msglvl .gt. 3) then
-c                   call cmout(logfil       , ncv, ncv   ,
-c     &                         workl(iuptri), ldq, ndigit,
-c     &              '_neupd: Triangular matrix after re-ordering')
-c                end if
-c            end if
-c
+#ifdef DEBUG_STAT
+            if (msglvl .gt. 2) then
+                call cvout (logfil, ncv, workl(iheig), ndigit,
+     &           '_neupd: Eigenvalues of H--reordered')
+                if (msglvl .gt. 3) then
+                   call cmout(logfil       , ncv, ncv   ,
+     &                         workl(iuptri), ldq, ndigit,
+     &              '_neupd: Triangular matrix after re-ordering')
+                end if
+            end if
+#endif
          end if
 c
 c        %---------------------------------------------%
@@ -730,19 +731,19 @@ c
                   workev(j) = cdotc(j, workl(ihbds), 1,
      &                        workl(invsub+(j-1)*ldq), 1)
  40         continue
-c
-c            if (msglvl .gt. 2) then
-c               call ccopy(nconv, workl(invsub+ncv-1), ldq,
-c     &                    workl(ihbds), 1)
-c               call cvout (logfil, nconv, workl(ihbds), ndigit,
-c     &            '_neupd: Last row of the eigenvector matrix for T')
-c               if (msglvl .gt. 3) then
-c                  call cmout(logfil       , ncv, ncv   ,
-c     &                        workl(invsub), ldq, ndigit,
-c     &               '_neupd: The eigenvector matrix for T')
-c               end if
-c            end if
-c
+#ifdef DEBUG_STAT
+            if (msglvl .gt. 2) then
+               call ccopy(nconv, workl(invsub+ncv-1), ldq,
+     &                    workl(ihbds), 1)
+               call cvout (logfil, nconv, workl(ihbds), ndigit,
+     &            '_neupd: Last row of the eigenvector matrix for T')
+               if (msglvl .gt. 3) then
+                  call cmout(logfil       , ncv, ncv   ,
+     &                        workl(invsub), ldq, ndigit,
+     &               '_neupd: The eigenvector matrix for T')
+               end if
+            end if
+#endif
 c           %---------------------------------------%
 c           | Copy Ritz estimates into workl(ihbds) |
 c           %---------------------------------------%
@@ -815,19 +816,19 @@ c
             d(k) = one / workl(iheig+k-1) + sigma
   60     continue
       end if
-c
-c      if (type .ne. 'REGULR' .and. msglvl .gt. 1) then
-c         call cvout (logfil, nconv, d, ndigit,
-c     &     '_neupd: Untransformed Ritz values.')
-c         call cvout (logfil, nconv, workl(ihbds), ndigit,
-c     &     '_neupd: Ritz estimates of the untransformed Ritz values.')
-c      else if ( msglvl .gt. 1) then
-c         call cvout (logfil, nconv, d, ndigit,
-c     &     '_neupd: Converged Ritz values.')
-c         call cvout (logfil, nconv, workl(ihbds), ndigit,
-c     &     '_neupd: Associated Ritz estimates.')
-c      end if
-c
+#ifdef DEBUG_STAT
+      if (type .ne. 'REGULR' .and. msglvl .gt. 1) then
+         call cvout (logfil, nconv, d, ndigit,
+     &     '_neupd: Untransformed Ritz values.')
+         call cvout (logfil, nconv, workl(ihbds), ndigit,
+     &     '_neupd: Ritz estimates of the untransformed Ritz values.')
+      else if ( msglvl .gt. 1) then
+         call cvout (logfil, nconv, d, ndigit,
+     &     '_neupd: Converged Ritz values.')
+         call cvout (logfil, nconv, workl(ihbds), ndigit,
+     &     '_neupd: Associated Ritz estimates.')
+      end if
+#endif
 c     %-------------------------------------------------%
 c     | Eigenvector Purification step. Formally perform |
 c     | one of inverse subspace iteration. Only used    |
