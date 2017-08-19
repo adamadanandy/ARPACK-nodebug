@@ -345,7 +345,8 @@ c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
-      character  type*6
+c      character  type*6
+      integer    type
       integer    bounds, ierr  , ih    , ihbds   , 
      &           iheigr, iheigi, iconj , nconv   , 
      &           invsub, iuptri, iwev  , iwork(1),
@@ -437,13 +438,13 @@ c
       end if
 c     
       if (mode .eq. 1 .or. mode .eq. 2) then
-         type = 'REGULR'
+         type = 1
       else if (mode .eq. 3 .and. sigmai .eq. zero) then
-         type = 'SHIFTI'
+         type = 2
       else if (mode .eq. 3 ) then
-         type = 'REALPT'
+         type = 3
       else if (mode .eq. 4 ) then
-         type = 'IMAGPT'
+         type = 4
       else 
                                               ierr = -10
       end if
@@ -700,7 +701,7 @@ c        | Place the computed eigenvalues of H into DR and DI |
 c        | if a spectral transformation was not used.         |
 c        %----------------------------------------------------%
 c
-         if (type .eq. 'REGULR') then 
+         if (type .eq. 1) then 
             call dcopy (nconv, workl(iheigr), 1, dr, 1)
             call dcopy (nconv, workl(iheigi), 1, di, 1)
          end if
@@ -918,7 +919,7 @@ c     | and corresponding error bounds of OP to those  |
 c     | of A*x = lambda*B*x.                           |
 c     %------------------------------------------------%
 c
-      if (type .eq. 'REGULR') then
+      if (type .eq. 1) then
 c
          if (rvec) 
      &      call dscal (ncv, rnorm, workl(ihbds), 1)     
@@ -931,7 +932,7 @@ c        | * Determine the Ritz estimates of the |
 c        |   Ritz values in the original system. |
 c        %---------------------------------------%
 c     
-         if (type .eq. 'SHIFTI') then
+         if (type .eq. 2) then
 c
             if (rvec) 
      &         call dscal (ncv, rnorm, workl(ihbds), 1)
@@ -943,12 +944,12 @@ c
      &                          / temp / temp
  50         continue
 c
-         else if (type .eq. 'REALPT') then
+         else if (type .eq. 3) then
 c
             do 60 k=1, ncv
  60         continue
 c
-         else if (type .eq. 'IMAGPT') then
+         else if (type .eq. 4) then
 c
             do 70 k=1, ncv
  70         continue
@@ -957,15 +958,15 @@ c
 c     
 c        %-----------------------------------------------------------%
 c        | *  Transform the Ritz values back to the original system. |
-c        |    For TYPE = 'SHIFTI' the transformation is              |
+c        |    For TYPE = 2 the transformation is              |
 c        |             lambda = 1/theta + sigma                      |
-c        |    For TYPE = 'REALPT' or 'IMAGPT' the user must from     |
+c        |    For TYPE = 3 or 4 the user must from     |
 c        |    Rayleigh quotients or a projection. See remark 3 above.| 
 c        | NOTES:                                                    |
 c        | *The Ritz vectors are not affected by the transformation. |
 c        %-----------------------------------------------------------%
 c     
-         if (type .eq. 'SHIFTI') then 
+         if (type .eq. 2) then 
 c
             do 80 k=1, ncv
                temp = dlapy2 ( workl(iheigr+k-1), 
@@ -979,7 +980,7 @@ c
             call dcopy (nconv, workl(iheigr), 1, dr, 1)
             call dcopy (nconv, workl(iheigi), 1, di, 1)
 c
-         else if (type .eq. 'REALPT' .or. type .eq. 'IMAGPT') then
+         else if (type .eq. 3 .or. type .eq. 4) then
 c
             call dcopy (nconv, workl(iheigr), 1, dr, 1)
             call dcopy (nconv, workl(iheigi), 1, di, 1)
@@ -988,14 +989,14 @@ c
 c
       end if
 #ifdef DEBUG_STAT
-      if (type .eq. 'SHIFTI' .and. msglvl .gt. 1) then
+      if (type .eq. 2 .and. msglvl .gt. 1) then
          call dvout (logfil, nconv, dr, ndigit,
      &   '_neupd: Untransformed real part of the Ritz valuess.')
          call dvout  (logfil, nconv, di, ndigit,
      &   '_neupd: Untransformed imag part of the Ritz valuess.')
          call dvout (logfil, nconv, workl(ihbds), ndigit,
      &   '_neupd: Ritz estimates of untransformed Ritz values.')
-      else if (type .eq. 'REGULR' .and. msglvl .gt. 1) then
+      else if (type .eq. 1 .and. msglvl .gt. 1) then
          call dvout (logfil, nconv, dr, ndigit,
      &   '_neupd: Real parts of converged Ritz values.')
          call dvout  (logfil, nconv, di, ndigit,
@@ -1010,7 +1011,7 @@ c     | one of inverse subspace iteration. Only used    |
 c     | for MODE = 2.                                   |
 c     %-------------------------------------------------%
 c
-      if (rvec .and. howmny .eq. 'A' .and. type .eq. 'SHIFTI') then
+      if (rvec .and. howmny .eq. 'A' .and. type .eq. 2) then
 c
 c        %------------------------------------------------%
 c        | Purify the computed Ritz vectors by adding a   |

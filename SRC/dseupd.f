@@ -261,7 +261,8 @@ c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
-      character  type*6
+c      character  type*6
+      integer    type
       integer    bounds , ierr   , ih    , ihb   , ihd   ,
      &           iq     , iw     , j     , k     , ldh   ,
      &           ldq    , mode   , msglvl, nconv , next  ,
@@ -332,13 +333,13 @@ c
       if (rvec .and. lworkl .lt. ncv**2+8*ncv) ierr = -7
 c     
       if (mode .eq. 1 .or. mode .eq. 2) then
-         type = 'REGULR'
+         type = 1
       else if (mode .eq. 3 ) then
-         type = 'SHIFTI'
+         type = 2
       else if (mode .eq. 4 ) then
-         type = 'BUCKLE'
+         type = 5
       else if (mode .eq. 5 ) then
-         type = 'CAYLEY'
+         type = 6
       else 
                                                ierr = -10
       end if
@@ -640,7 +641,7 @@ c     | Ritz estimates of OP to those of A*x=lambda*B*x. The Ritz values |
 c     | (and corresponding data) are returned in ascending order.        |
 c     %------------------------------------------------------------------%
 c
-      if (type .eq. 'REGULR') then
+      if (type .eq. 1) then
 c
 c        %---------------------------------------------------------%
 c        | Ascending sort of wanted Ritz values, vectors and error |
@@ -658,11 +659,11 @@ c
 c        %-------------------------------------------------------------%
 c        | *  Make a copy of all the Ritz values.                      |
 c        | *  Transform the Ritz values back to the original system.   |
-c        |    For TYPE = 'SHIFTI' the transformation is                |
+c        |    For TYPE = 2 the transformation is                |
 c        |             lambda = 1/theta + sigma                        |
-c        |    For TYPE = 'BUCKLE' the transformation is                |
+c        |    For TYPE = 5 the transformation is                |
 c        |             lambda = sigma * theta / ( theta - 1 )          |
-c        |    For TYPE = 'CAYLEY' the transformation is                |
+c        |    For TYPE = 6 the transformation is                |
 c        |             lambda = sigma * (theta + 1) / (theta - 1 )     |
 c        |    where the theta are the Ritz values returned by dsaupd .  |
 c        | NOTES:                                                      |
@@ -671,16 +672,16 @@ c        |  They are only reordered.                                   |
 c        %-------------------------------------------------------------%
 c
          call dcopy  (ncv, workl(ihd), 1, workl(iw), 1)
-         if (type .eq. 'SHIFTI') then 
+         if (type .eq. 2) then 
             do 40 k=1, ncv
                workl(ihd+k-1) = one / workl(ihd+k-1) + sigma
   40        continue
-         else if (type .eq. 'BUCKLE') then
+         else if (type .eq. 5) then
             do 50 k=1, ncv
                workl(ihd+k-1) = sigma * workl(ihd+k-1) / 
      &                          (workl(ihd+k-1) - one)
   50        continue
-         else if (type .eq. 'CAYLEY') then
+         else if (type .eq. 6) then
             do 60 k=1, ncv
                workl(ihd+k-1) = sigma * (workl(ihd+k-1) + one) /
      &                          (workl(ihd+k-1) - one)
@@ -767,13 +768,13 @@ c     Not yet implemented. See remark 2 above.
 c
       end if
 c
-      if (type .eq. 'REGULR' .and. rvec) then
+      if (type .eq. 1 .and. rvec) then
 c
             do 70 j=1, ncv
                workl(ihb+j-1) = rnorm * abs( workl(ihb+j-1) )
  70         continue
 c
-      else if (type .ne. 'REGULR' .and. rvec) then
+      else if (type .ne. 1 .and. rvec) then
 c
 c        %-------------------------------------------------%
 c        | *  Determine Ritz estimates of the theta.       |
@@ -785,21 +786,21 @@ c        | *  Determine Ritz estimates of the lambda.      |
 c        %-------------------------------------------------%
 c
          call dscal  (ncv, bnorm2, workl(ihb), 1)
-         if (type .eq. 'SHIFTI') then 
+         if (type .eq. 2) then 
 c
             do 80 k=1, ncv
                workl(ihb+k-1) = abs( workl(ihb+k-1) ) 
      &                        / workl(iw+k-1)**2
  80         continue
 c
-         else if (type .eq. 'BUCKLE') then
+         else if (type .eq. 5) then
 c
             do 90 k=1, ncv
                workl(ihb+k-1) = sigma * abs( workl(ihb+k-1) )
      &                        / (workl(iw+k-1)-one )**2
  90         continue
 c
-         else if (type .eq. 'CAYLEY') then
+         else if (type .eq. 6) then
 c
             do 100 k=1, ncv
                workl(ihb+k-1) = abs( workl(ihb+k-1)
@@ -810,7 +811,7 @@ c
 c
       end if
 #ifdef DEBUG_STAT
-      if (type .ne. 'REGULR' .and. msglvl .gt. 1) then
+      if (type .ne. 1 .and. msglvl .gt. 1) then
          call dvout (logfil, nconv, d, ndigit,
      &          '_seupd: Untransformed converged Ritz values')
          call dvout (logfil, nconv, workl(ihb), ndigit, 
@@ -828,14 +829,14 @@ c     | one of inverse subspace iteration. Only used    |
 c     | for MODE = 3,4,5. See reference 7               |
 c     %-------------------------------------------------%
 c
-      if (rvec .and. (type .eq. 'SHIFTI' .or. type .eq. 'CAYLEY')) then
+      if (rvec .and. (type .eq. 2 .or. type .eq. 6)) then
 c
          do 110 k=0, nconv-1
             workl(iw+k) = workl(iq+k*ldq+ncv-1)
      &                  / workl(iw+k)
  110     continue
 c
-      else if (rvec .and. type .eq. 'BUCKLE') then
+      else if (rvec .and. type .eq. 5) then
 c
          do 120 k=0, nconv-1
             workl(iw+k) = workl(iq+k*ldq+ncv-1)
@@ -844,7 +845,7 @@ c
 c
       end if 
 c
-      if (type .ne. 'REGULR')
+      if (type .ne. 1)
      &   call dger  (n, nconv, one, resid, 1, workl(iw), 1, z, ldz)
 c
  9000 continue

@@ -296,7 +296,8 @@ c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
-      character  type*6
+c      character  type*6
+      integer    type
       integer    bounds, ierr  , ih    , ihbds, iheig , nconv ,
      &           invsub, iuptri, iwev  , j    , ldh   , ldq   ,
      &           mode  , msglvl, ritz  , wr   , k     , irz   ,
@@ -385,9 +386,9 @@ c
       end if
 c     
       if (mode .eq. 1 .or. mode .eq. 2) then
-         type = 'REGULR'
+         type = 1
       else if (mode .eq. 3 ) then
-         type = 'SHIFTI'
+         type = 2
       else 
                                               ierr = -10
       end if
@@ -628,7 +629,7 @@ c        | Place the computed eigenvalues of H into D |
 c        | if a spectral transformation was not used. |
 c        %--------------------------------------------%
 c
-         if (type .eq. 'REGULR') then
+         if (type .eq. 1) then
             call ccopy(nconv, workl(iheig), 1, d, 1)
          end if
 c
@@ -780,7 +781,7 @@ c     | and corresponding error bounds of OP to those  |
 c     | of A*x = lambda*B*x.                           |
 c     %------------------------------------------------%
 c
-      if (type .eq. 'REGULR') then
+      if (type .eq. 1) then
 c
          if (rvec) 
      &      call cscal(ncv, rnorm, workl(ihbds), 1)
@@ -811,13 +812,13 @@ c     | NOTES:                                                    |
 c     | *The Ritz vectors are not affected by the transformation. |
 c     %-----------------------------------------------------------%
 c    
-      if (type .eq. 'SHIFTI') then
+      if (type .eq. 2) then
          do 60 k=1, nconv
             d(k) = one / workl(iheig+k-1) + sigma
   60     continue
       end if
 #ifdef DEBUG_STAT
-      if (type .ne. 'REGULR' .and. msglvl .gt. 1) then
+      if (type .ne. 1 .and. msglvl .gt. 1) then
          call cvout (logfil, nconv, d, ndigit,
      &     '_neupd: Untransformed Ritz values.')
          call cvout (logfil, nconv, workl(ihbds), ndigit,
@@ -835,7 +836,7 @@ c     | one of inverse subspace iteration. Only used    |
 c     | for MODE = 3. See reference 3.                  |
 c     %-------------------------------------------------%
 c
-      if (rvec .and. howmny .eq. 'A' .and. type .eq. 'SHIFTI') then
+      if (rvec .and. howmny .eq. 'A' .and. type .eq. 2) then
 c
 c        %------------------------------------------------%
 c        | Purify the computed Ritz vectors by adding a   |
