@@ -131,7 +131,7 @@ c
 c\Routines called:
 c     zgetv0  ARPACK routine to generate the initial vector.
 c     ivout   ARPACK utility routine that prints integers.
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     zmout   ARPACK utility routine that prints matrices
 c     zvout   ARPACK utility routine that prints vectors.
 c     zlanhs  LAPACK routine that computes various norms of a matrix.
@@ -273,7 +273,7 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   zaxpy, zcopy, zscal, zdscal, zgemv, zgetv0, 
-     &           dlabad, zvout, zmout, ivout, second
+     &           dlabad, zvout, zmout, ivout, arscnd
 c
 c     %--------------------%
 c     | External Functions |
@@ -326,7 +326,7 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 #ifdef DEBUG_STAT
-         call second (t0)
+         call arscnd (t0)
          msglvl = mcaitr
 #endif 
 c        %------------------------------%
@@ -440,7 +440,7 @@ c              %------------------------------------------------%
 c
                info = j - 1
 #ifdef DEBUG_STAT
-               call second (t1)
+               call arscnd (t1)
                tcaitr = tcaitr + (t1 - t0)
 #endif
                ido = 99
@@ -482,7 +482,7 @@ c
          step3 = .true.
 #ifdef DEBUG_STAT
          nopx  = nopx + 1
-         call second (t2)
+         call arscnd (t2)
 #endif
          call zcopy (n, v(1,j), 1, workd(ivj), 1)
          ipntr(1) = ivj
@@ -503,7 +503,7 @@ c        | WORKD(IRJ:IRJ+N-1) := OP*v_{j}   |
 c        | if step3 = .true.                |
 c        %----------------------------------%
 #ifdef DEBUG_STAT
-         call second (t3)
+         call arscnd (t3)
          tmvopx = tmvopx + (t3 - t2)
 #endif
          step3 = .false.
@@ -519,7 +519,7 @@ c        | STEP 4:  Finish extending the Arnoldi |
 c        |          factorization to length j.   |
 c        %---------------------------------------%
 #ifdef DEBUG_STAT
-         call second (t2)
+         call arscnd (t2)
 #endif
          if (bmat .eq. 'G') then
 #ifdef DEBUG_STAT
@@ -547,7 +547,7 @@ c        | if step4 = .true.                |
 c        %----------------------------------%
 #ifdef DEBUG_STAT
          if (bmat .eq. 'G') then
-            call second (t3)
+            call arscnd (t3)
             tmvbx = tmvbx + (t3 - t2)
          end if
 #endif 
@@ -592,11 +592,11 @@ c
 c
          if (j .gt. 1) h(j,j-1) = dcmplx(betaj, rzero)
 #ifdef DEBUG_STAT
-         call second (t4)
+         call arscnd (t4)
 #endif
          orth1 = .true.
 #ifdef DEBUG_STAT 
-         call second (t2)
+         call arscnd (t2)
 #endif
          if (bmat .eq. 'G') then
 #ifdef DEBUG_STAT
@@ -623,7 +623,7 @@ c        | WORKD(IPJ:IPJ+N-1) := B*r_{j}.                    |
 c        %---------------------------------------------------%
 #ifdef DEBUG_STAT
          if (bmat .eq. 'G') then
-            call second (t3)
+            call arscnd (t3)
             tmvbx = tmvbx + (t3 - t2)
          end if
 #endif 
@@ -703,7 +703,7 @@ c
 c 
          orth2 = .true.
 #ifdef DEBUG_STAT
-         call second (t2)
+         call arscnd (t2)
 #endif
          if (bmat .eq. 'G') then
 #ifdef DEBUG_STAT
@@ -730,7 +730,7 @@ c        | Back from reverse communication if ORTH2 = .true. |
 c        %---------------------------------------------------%
 #ifdef DEBUG_STAT
          if (bmat .eq. 'G') then
-            call second (t3)
+            call arscnd (t3)
             tmvbx = tmvbx + (t3 - t2)
          end if 
 #endif
@@ -809,7 +809,7 @@ c
          rstart = .false.
          orth2  = .false.
 #ifdef DEBUG_STAT
-         call second (t5)
+         call arscnd (t5)
          titref = titref + (t5 - t4)
 #endif
 c        %------------------------------------%
@@ -819,7 +819,7 @@ c
          j = j + 1
          if (j .gt. k+np) then
 #ifdef DEBUG_STAT
-            call second (t1)
+            call arscnd (t1)
             tcaitr = tcaitr + (t1 - t0)
 #endif
             ido = 99

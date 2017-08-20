@@ -97,7 +97,7 @@ c     pp 357-385.
 c
 c\Routines called:
 c     ivout   ARPACK utility routine that prints integers.
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     dmout   ARPACK utility routine that prints matrices.
 c     dvout   ARPACK utility routine that prints vectors.
 c     dlabad  LAPACK routine that computes machine constants.
@@ -189,7 +189,7 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   daxpy, dcopy, dscal, dlacpy, dlarfg, dlarf,
-     &           dlaset, dlabad, second, dlartg
+     &           dlaset, dlabad, arscnd, dlartg
 c
 c     %--------------------%
 c     | External Functions |
@@ -237,7 +237,7 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 #ifdef DEBUG_STAT
-      call second (t0)
+      call arscnd (t0)
       msglvl = mnapps
 #endif
       kplusp = kev + np 
@@ -601,8 +601,10 @@ c
 c     %-------------------------------------------------%
 c     |  Move v(:,kplusp-kev+1:kplusp) into v(:,1:kev). |
 c     %-------------------------------------------------%
-c
-      call dlacpy ('A', n, kev, v(1,kplusp-kev+1), ldv, v, ldv)
+c     Resolve ARPACK issues with Intel MKL 11.0 Update 3
+      do 150 i = 1, kev
+         call dcopy(n, v(1,kplusp-kev+i), 1, v(1,i), 1)
+  150 continue
 c 
 c     %--------------------------------------------------------------%
 c     | Copy the (kev+1)-st column of (V*Q) in the appropriate place |
@@ -639,7 +641,7 @@ c
 #endif
  9000 continue
 #ifdef DEBUG_STAT
-      call second (t1)
+      call arscnd (t1)
       tnapps = tnapps + (t1 - t0)
 #endif
       return

@@ -31,7 +31,7 @@ include ../ARmake.inc
 #  ../ARmake.inc and is created at the next higher directory level.
 #
 
-OBJS  = icnteq.o icopy.o iset.o iswap.o ivout.o second.o
+OBJS  = icnteq.o icopy.o iset.o iswap.o ivout.o arscnd.o
 
 SOBJ  = svout.o  smout.o
 

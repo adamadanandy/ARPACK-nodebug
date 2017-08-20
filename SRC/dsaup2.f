@@ -48,7 +48,7 @@ c
 c  H       Double precision (NEV+NP) by 2 array.  (OUTPUT)
 c          H is used to store the generated symmetric tridiagonal matrix
 c          The subdiagonal is stored in the first column of H starting 
-c          at H(2,1).  The main diagonal is stored in the second column
+c          at H(2,1).  The main diagonal is stored in the arscnd column
 c          of H starting at H(1,2). If dsaup2 converges store the 
 c          B-norm of the final residual vector in H(1,1).
 c
@@ -148,7 +148,7 @@ c     dseigt  ARPACK compute Ritz values and error bounds routine.
 c     dsgets  ARPACK reorder Ritz values and error bounds routine.
 c     dsortr  ARPACK sorting routine.
 c     ivout   ARPACK utility routine that prints integers.
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     dvout   ARPACK utility routine that prints vectors.
 c     dlamch  LAPACK routine that determines machine constants.
 c     dcopy   Level 1 BLAS that copies one vector to another.
@@ -235,7 +235,7 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   dcopy, dgetv0, dsaitr, dscal, dsconv, dseigt, dsgets, 
-     &           dsapps, dsortr, dvout, ivout, second, dswap
+     &           dsapps, dsortr, dvout, ivout, arscnd, dswap
 c
 c     %--------------------%
 c     | External Functions |
@@ -262,7 +262,7 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 #ifdef DEBUG_STAT
-         call second (t0)
+         call arscnd (t0)
          msglvl = msaup2
 #endif
 c        %---------------------------------%
@@ -549,6 +549,7 @@ c
                nevd2 = nev0 / 2
                nevm2 = nev0 - nevd2 
                if ( nev .gt. 1 ) then
+                  np = kplusp - nev0
                   call dswap ( min(nevd2,np), ritz(nevm2+1), 1,
      &                 ritz( max(kplusp-nevd2+1,kplusp-np+1) ), 1)
                   call dswap ( min(nevd2,np), bounds(nevm2+1), 1,
@@ -771,7 +772,7 @@ c        %---------------------------------------------%
 c
          cnorm = .true.
 #ifdef DEBUG_STAT
-         call second (t2)
+         call arscnd (t2)
 #endif
          if (bmat .eq. 'G') then
 #ifdef DEBUG_STAT
@@ -799,7 +800,7 @@ c        | WORKD(1:N) := B*RESID            |
 c        %----------------------------------%
 #ifdef DEBUG_STAT
          if (bmat .eq. 'G') then
-            call second (t3)
+            call arscnd (t3)
             tmvbx = tmvbx + (t3 - t2)
          end if
 #endif
@@ -841,7 +842,7 @@ c     %------------%
 c     | Error exit |
 c     %------------%
 #ifdef DEBUG_STAT
-      call second (t1)
+      call arscnd (t1)
       tsaup2 = t1 - t0
 #endif
  9000 continue

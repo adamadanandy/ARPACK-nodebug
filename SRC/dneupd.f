@@ -97,7 +97,7 @@ c
 c          The complex Ritz vector associated with the Ritz value 
 c          with positive imaginary part is stored in two consecutive 
 c          columns.  The first column holds the real part of the Ritz 
-c          vector and the second column holds the imaginary part.  The 
+c          vector and the arscnd column holds the imaginary part.  The 
 c          Ritz vector associated with the Ritz value with negative 
 c          imaginary part is simply the complex conjugate of the Ritz vector 
 c          associated with the positive imaginary part.
@@ -354,7 +354,7 @@ c      character  type*6
      &           mode  , msglvl, outncv, ritzr   ,
      &           ritzi , wri   , wrr   , irr     ,
      &           iri   , ibd   , ishift, numcnv  ,
-     &           np    , jj 
+     &           np    , jj    , nconv2 
       logical    reord
       Double precision 
      &           conds  , rnorm, sep  , temp,
@@ -591,7 +591,7 @@ c
      &          workl(ibd+jj-1) .le. tol*temp1) then
                select(jj) = .true.
                numcnv = numcnv + 1
-               if (jj .gt. nev) reord = .true.
+               if (jj .gt. nconv) reord = .true.
             endif
    11    continue
 c
@@ -668,11 +668,16 @@ c
      &                   ncv          , iwork        ,
      &                   1            , ierr)
 c
+            if (nconv2 .lt. nconv) then
+               nconv = nconv2
+            end if
+
             if (ierr .eq. 1) then
                info = 1
                go to 9000
             end if
 #ifdef DEBUG_STAT
+
             if (msglvl .gt. 2) then
                 call dvout (logfil, ncv, workl(iheigr), ndigit,
      &           '_neupd: Real part of the eigenvalues of H--reordered')
@@ -958,9 +963,9 @@ c
 c     
 c        %-----------------------------------------------------------%
 c        | *  Transform the Ritz values back to the original system. |
-c        |    For TYPE = 2 the transformation is              |
+c        |    For TYPE = 2 the transformation is                     |
 c        |             lambda = 1/theta + sigma                      |
-c        |    For TYPE = 3 or 4 the user must from     |
+c        |    For TYPE = 3 or 4 the user must from                   |
 c        |    Rayleigh quotients or a projection. See remark 3 above.| 
 c        | NOTES:                                                    |
 c        | *The Ritz vectors are not affected by the transformation. |
@@ -1026,19 +1031,22 @@ c        %------------------------------------------------%
 c
          iconj = 0
          do 110 j=1, nconv
-            if (workl(iheigi+j-1) .eq. zero) then
+            if ((workl(iheigi+j-1) .eq. zero) .and.
+     &           (workl(iheigr+j-1) .ne. zero)) then
                workev(j) =  workl(invsub+(j-1)*ldq+ncv-1) /
      &                      workl(iheigr+j-1)
             else if (iconj .eq. 0) then
                temp = dlapy2 ( workl(iheigr+j-1), workl(iheigi+j-1) )
-               workev(j) = ( workl(invsub+(j-1)*ldq+ncv-1) * 
-     &                       workl(iheigr+j-1) +
-     &                       workl(invsub+j*ldq+ncv-1) * 
-     &                       workl(iheigi+j-1) ) / temp / temp
-               workev(j+1) = ( workl(invsub+j*ldq+ncv-1) * 
-     &                         workl(iheigr+j-1) -
-     &                         workl(invsub+(j-1)*ldq+ncv-1) * 
-     &                         workl(iheigi+j-1) ) / temp / temp
+               if (temp .ne. zero) then
+                  workev(j) = ( workl(invsub+(j-1)*ldq+ncv-1) * 
+     &                          workl(iheigr+j-1) +
+     &                          workl(invsub+j*ldq+ncv-1) * 
+     &                          workl(iheigi+j-1) ) / temp / temp
+                  workev(j+1) = ( workl(invsub+j*ldq+ncv-1) * 
+     &                            workl(iheigr+j-1) -
+     &                            workl(invsub+(j-1)*ldq+ncv-1) * 
+     &                            workl(iheigi+j-1) ) / temp / temp
+               end if
                iconj = 1
             else
                iconj = 0

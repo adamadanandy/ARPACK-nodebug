@@ -89,7 +89,7 @@ c     a k-Step Arnoldi Method", SIAM J. Matr. Anal. Apps., 13 (1992),
 c     pp 357-385.
 c
 c\Routines called:
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     cvout   ARPACK utility routine that prints vectors.
 c     clarnv  LAPACK routine for generating a random vector. 
 c     cgemv   Level 2 BLAS routine for matrix vector multiplication.
@@ -170,7 +170,7 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   ccopy, cgemv, clarnv, cvout, second
+      external   ccopy, cgemv, clarnv, cvout, arscnd
 c
 c     %--------------------%
 c     | External Functions |
@@ -214,7 +214,7 @@ c        | & message level for debugging |
 c        %-------------------------------%
 c
 #ifdef DEBUG_STAT
-         call second (t0)
+         call arscnd (t0)
          msglvl = mgetv0
 #endif
 c 
@@ -241,10 +241,13 @@ c        %----------------------------------------------------------%
 c        | Force the starting vector into the range of OP to handle |
 c        | the generalized problem when B is possibly (singular).   |
 c        %----------------------------------------------------------%
-c
-         call second (t2)
+#ifdef DEBUG_STAT
+         call arscnd (t2)
+#endif
          if (bmat .eq. 'G') then
+#ifdef DEBUG_STAT
             nopx = nopx + 1
+#endif
             ipntr(1) = 1
             ipntr(2) = n + 1
             call ccopy (n, resid, 1, workd, 1)
@@ -264,19 +267,23 @@ c     | Back from computing B*(orthogonalized-vector) |
 c     %-----------------------------------------------%
 c
       if (orth)  go to 40
-c 
-      call second (t3)
+#ifdef DEBUG_STAT
+      call arscnd (t3)
+#endif
       tmvopx = tmvopx + (t3 - t2)
 c 
 c     %------------------------------------------------------%
 c     | Starting vector is now in the range of OP; r = OP*r; |
 c     | Compute B-norm of starting vector.                   |
 c     %------------------------------------------------------%
-c
-      call second (t2)
+#ifdef DEBUG_STAT
+      call arscnd (t2)
+#endif
       first = .TRUE.
       if (bmat .eq. 'G') then
+#ifdef DEBUG_STAT
          nbx = nbx + 1
+#endif
          call ccopy (n, workd(n+1), 1, resid, 1)
          ipntr(1) = n + 1
          ipntr(2) = 1
@@ -287,12 +294,12 @@ c
       end if
 c 
    20 continue
-c
+#ifdef DEBUG_STAT
       if (bmat .eq. 'G') then
-         call second (t3)
+         call arscnd (t3)
          tmvbx = tmvbx + (t3 - t2)
       end if
-c 
+#endif
       first = .FALSE.
       if (bmat .eq. 'G') then
           cnorm  = cdotc (n, resid, 1, workd, 1)
@@ -333,7 +340,7 @@ c     | Compute the B-norm of the orthogonalized starting vector |
 c     %----------------------------------------------------------%
 c
 #ifdef DEBUG_STAT
-      call second (t2)
+      call arscnd (t2)
 #endif
       if (bmat .eq. 'G') then
          nbx = nbx + 1
@@ -349,7 +356,7 @@ c
    40 continue
 #ifdef DEBUG_STAT
       if (bmat .eq. 'G') then
-         call second (t3)
+         call arscnd (t3)
          tmvbx = tmvbx + (t3 - t2)
       end if
 #endif 
@@ -409,7 +416,7 @@ c
 #endif
       ido = 99
 #ifdef DEBUG_STAT
-      call second (t1)
+      call arscnd (t1)
       tgetv0 = tgetv0 + (t1 - t0)
 #endif 
  9000 continue

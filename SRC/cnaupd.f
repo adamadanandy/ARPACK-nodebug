@@ -246,7 +246,7 @@ c                is to increase the size of NCV relative to NEV.
 c                See remark 4 below.
 c          = -1: N must be positive.
 c          = -2: NEV must be positive.
-c          = -3: NCV-NEV >= 1 and less than or equal to N.
+c          = -3: NCV-NEV >= 2 and less than or equal to N.
 c          = -4: The maximum number of Arnoldi update iteration 
 c                must be greater than zero.
 c          = -5: WHICH must be one of 'LM', 'SM', 'LR', 'SR', 'LI', 'SI'
@@ -347,7 +347,7 @@ c  2. R.B. Lehoucq, "Analysis and Implementation of an Implicitly
 c     Restarted Arnoldi Iteration", Rice University Technical Report
 c     TR95-13, Department of Computational and Applied Mathematics.
 c  3. B.N. Parlett & Y. Saad, "_Complex_ Shift and Invert Strategies for
-c     Real Matrices", Linear Algebra and its Applications, vol 88/89,
+c     _Real_ Matrices", Linear Algebra and its Applications, vol 88/89,
 c     pp 575-595, (1987).
 c
 c\Routines called:
@@ -356,7 +356,7 @@ c             Arnoldi Iteration.
 c     cstatn  ARPACK routine that initializes the timing variables.
 c     ivout   ARPACK utility routine that prints integers.
 c     cvout   ARPACK utility routine that prints vectors.
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     slamch  LAPACK routine that determines machine constants.
 c
 c\Author
@@ -429,7 +429,7 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   cnaup2, cvout, ivout, second, cstatn
+      external   cnaup2, cvout, ivout, arscnd, cstatn
 c
 c     %--------------------%
 c     | External Functions |
@@ -452,7 +452,7 @@ c        %-------------------------------%
 c
          call cstatn
 #ifdef DEBUG_STAT
-         call second (t0)
+         call arscnd (t0)
          msglvl = mcaupd
 #endif
 c        %----------------%
@@ -613,7 +613,7 @@ c
      &               '_naupd: Associated Ritz estimates')
       end if
 c
-      call second (t1)
+      call arscnd (t1)
       tcaupd = t1 - t0
 c
       if (msglvl .gt. 0) then

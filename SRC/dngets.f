@@ -135,7 +135,7 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dcopy, dsortc, second
+      external   dcopy, dsortc, arscnd
 c
 c     %----------------------%
 c     | Intrinsics Functions |
@@ -152,7 +152,7 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 #ifdef DEBUG_STAT
-      call second (t0)
+      call arscnd (t0)
       msglvl = mngets
 #endif
 c     %----------------------------------------------------%
@@ -208,7 +208,7 @@ c
          call dsortc ( 'SR', .true., np, bounds, ritzr, ritzi )
       end if
 #ifdef DEBUG_STAT
-      call second (t1)
+      call arscnd (t1)
       tngets = tngets + (t1 - t0)
 c
       if (msglvl .gt. 0) then

@@ -30,12 +30,12 @@ include ../ARmake.inc
 #  The name of the library is defined by $(ARPACKLIB) in
 #  ../ARmake.inc and is created at the next higher directory level.
 
-SOBJ  = sgetv0.o slaqrb.o sstqrb.o ssortc.o ssortr.o sstatn.o sstats.o \
+SOBJ  = sgetv0.o sstqrb.o ssortc.o ssortr.o sstatn.o sstats.o \
 	snaitr.o snapps.o snaup2.o snaupd.o snconv.o sneigh.o sngets.o \
 	ssaitr.o ssapps.o ssaup2.o ssaupd.o ssconv.o sseigt.o ssgets.o \
 	sneupd.o sseupd.o ssesrt.o
 
-DOBJ  = dgetv0.o dlaqrb.o dstqrb.o dsortc.o dsortr.o dstatn.o dstats.o \
+DOBJ  = dgetv0.o dstqrb.o dsortc.o dsortr.o dstatn.o dstats.o \
 	dnaitr.o dnapps.o dnaup2.o dnaupd.o dnconv.o dneigh.o dngets.o \
 	dsaitr.o dsapps.o dsaup2.o dsaupd.o dsconv.o dseigt.o dsgets.o \
 	dneupd.o dseupd.o dsesrt.o

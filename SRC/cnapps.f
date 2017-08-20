@@ -92,7 +92,7 @@ c     pp 357-385.
 c
 c\Routines called:
 c     ivout   ARPACK utility routine that prints integers.
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     cmout   ARPACK utility routine that prints matrices
 c     cvout   ARPACK utility routine that prints vectors.
 c     clacpy  LAPACK matrix copy routine.
@@ -184,7 +184,7 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   caxpy, ccopy, cgemv, cscal, clacpy, clartg, 
-     &           cvout, claset, slabad, cmout, second, ivout
+     &           cvout, claset, slabad, cmout, arscnd, ivout
 c
 c     %--------------------%
 c     | External Functions |
@@ -240,7 +240,7 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 #ifdef DEBUG_STAT
-      call second (t0)
+      call arscnd (t0)
       msglvl = mcapps
 #endif 
       kplusp = kev + np 
@@ -498,7 +498,7 @@ c
 #endif
  9000 continue
 #ifdef DEBUG_STAT
-      call second (t1)
+      call arscnd (t1)
       tcapps = tcapps + (t1 - t0)
 #endif 
       return

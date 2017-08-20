@@ -91,7 +91,7 @@ c     TR95-13, Department of Computational and Applied Mathematics.
 c
 c\Routines called:
 c     ivout   ARPACK utility routine that prints integers. 
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     svout   ARPACK utility routine that prints vectors.
 c     slamch  LAPACK routine that determines machine constants.
 c     slartg  LAPACK Givens rotation construction routine.
@@ -176,7 +176,7 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   saxpy, scopy, sscal, slacpy, slartg, slaset, svout, 
-     &           ivout, second, sgemv
+     &           ivout, arscnd, sgemv
 c
 c     %--------------------%
 c     | External Functions |
@@ -213,7 +213,7 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 #ifdef DEBUG_STAT
-      call second (t0)
+      call arscnd (t0)
       msglvl = msapps
 #endif
       kplusp = kev + np 
@@ -265,7 +265,7 @@ c
                   call ivout (logfil, 1, i, ndigit, 
      &                 '_sapps: deflation at row/column no.')
                   call ivout (logfil, 1, jj, ndigit, 
-     &                 '_sapps: occured before shift number.')
+     &                 '_sapps: occurred before shift number.')
                   call svout (logfil, 1, h(i+1,1), ndigit, 
      &                 '_sapps: the corresponding off diagonal element')
                end if
@@ -507,7 +507,7 @@ c
          end if
       end if
 c
-      call second (t1)
+      call arscnd (t1)
       tsapps = tsapps + (t1 - t0)
 #endif
  9000 continue 

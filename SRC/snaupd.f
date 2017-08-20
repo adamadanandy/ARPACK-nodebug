@@ -110,7 +110,7 @@ c          'SR' -> want the NEV eigenvalues of smallest real part.
 c          'LI' -> want the NEV eigenvalues of largest imaginary part.
 c          'SI' -> want the NEV eigenvalues of smallest imaginary part.
 c
-c  NEV     Integer.  (INPUT/OUTPUT)
+c  NEV     Integer.  (INPUT)
 c          Number of eigenvalues of OP to be computed. 0 < NEV < N-1.
 c
 c  TOL     Real scalar.  (INPUT)
@@ -379,7 +379,7 @@ c\Routines called:
 c     snaup2  ARPACK routine that implements the Implicitly Restarted
 c             Arnoldi Iteration.
 c     ivout   ARPACK utility routine that prints integers.
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     svout   ARPACK utility routine that prints vectors.
 c     slamch  LAPACK routine that determines machine constants.
 c
@@ -454,7 +454,7 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   snaup2, svout, ivout, second, sstatn
+      external   snaup2, svout, ivout, arscnd, sstatn
 c
 c     %--------------------%
 c     | External Functions |
@@ -477,7 +477,7 @@ c        %-------------------------------%
 c
          call sstatn
 #ifdef DEBUG_STAT
-         call second (t0)
+         call arscnd (t0)
          msglvl = mnaupd
 #endif
 c        %----------------%
@@ -499,13 +499,13 @@ c
          mode   = iparam(7)
 c
          if (n .le. 0) then
-            ierr = -1
+             ierr = -1
          else if (nev .le. 0) then
-            ierr = -2
+             ierr = -2
          else if (ncv .le. nev+1 .or.  ncv .gt. n) then
-            ierr = -3
-         else if (mxiter .le.          0) then
-            ierr = 4
+             ierr = -3
+         else if (mxiter .le.0) then
+             ierr = -4
          else if (which .ne. 'LM' .and.
      &       which .ne. 'SM' .and.
      &       which .ne. 'LR' .and.
@@ -642,7 +642,7 @@ c
      &               '_naupd: Associated Ritz estimates')
       end if
 c
-      call second (t1)
+      call arscnd (t1)
       tnaupd = t1 - t0
 c
       if (msglvl .gt. 0) then

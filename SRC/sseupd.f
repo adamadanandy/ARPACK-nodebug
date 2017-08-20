@@ -503,7 +503,7 @@ c
      &          workl(ibd+jj-1) .le. tol*temp1) then
                select(jj) = .true.
                numcnv = numcnv + 1
-               if (jj .gt. nev) reord = .true.
+               if (jj .gt. nconv) reord = .true.
             endif
    11    continue
 c
@@ -659,11 +659,11 @@ c
 c        %-------------------------------------------------------------%
 c        | *  Make a copy of all the Ritz values.                      |
 c        | *  Transform the Ritz values back to the original system.   |
-c        |    For TYPE = 2 the transformation is                |
+c        |    For TYPE = 2 the transformation is                       |
 c        |             lambda = 1/theta + sigma                        |
-c        |    For TYPE = 5 the transformation is                |
+c        |    For TYPE = 5 the transformation is                       |
 c        |             lambda = sigma * theta / ( theta - 1 )          |
-c        |    For TYPE = 6 the transformation is                |
+c        |    For TYPE = 6 the transformation is                       |
 c        |             lambda = sigma * (theta + 1) / (theta - 1 )     |
 c        |    where the theta are the Ritz values returned by ssaupd.  |
 c        | NOTES:                                                      |
@@ -762,6 +762,16 @@ c
      &                ldq   , workl(iw+ncv), workl(ihb),
      &                ncv   , temp         , ierr)
 c
+c        %-----------------------------------------------------%
+c        | Make a copy of the last row into                    |
+c        | workl(iw+ncv:iw+2*ncv), as it is needed again in    |
+c        | the Ritz vector purification step below             |
+c        %-----------------------------------------------------%
+c
+         do 67 j = 1, nconv
+            workl(iw+ncv+j-1) = workl(ihb+j-1)
+ 67      continue
+
       else if (rvec .and. howmny .eq. 'S') then
 c
 c     Not yet implemented. See remark 2 above.
@@ -832,14 +842,14 @@ c
       if (rvec .and. (type .eq. 2 .or. type .eq. 6)) then
 c
          do 110 k=0, nconv-1
-            workl(iw+k) = workl(iq+k*ldq+ncv-1)
+            workl(iw+k) = workl(iw+ncv+k)
      &                  / workl(iw+k)
  110     continue
 c
       else if (rvec .and. type .eq. 5) then
 c
          do 120 k=0, nconv-1
-            workl(iw+k) = workl(iq+k*ldq+ncv-1)
+            workl(iw+k) = workl(iw+ncv+k)
      &                  / (workl(iw+k)-one)
  120     continue
 c

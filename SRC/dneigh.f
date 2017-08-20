@@ -49,7 +49,7 @@ c          the front end.  This is needed to keep the full Schur form
 c          of H and also in the calculation of the eigenvectors of H.
 c
 c  IERR    Integer.  (OUTPUT)
-c          Error exit flag from dlaqrb or dtrevc.
+c          Error exit flag from dlahqr or dtrevc.
 c
 c\EndDoc
 c
@@ -61,9 +61,9 @@ c\Local variables:
 c     xxxxxx  real
 c
 c\Routines called:
-c     dlaqrb  ARPACK routine to compute the real Schur form of an
+c     dlahqr  LAPACK routine to compute the real Schur form of an
 c             upper Hessenberg matrix and last row of the Schur vectors.
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     dmout   ARPACK utility routine that prints matrices
 c     dvout   ARPACK utility routine that prints vectors.
 c     dlacpy  LAPACK matrix copy routine.
@@ -144,7 +144,7 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dcopy, dlacpy, dlaqrb, dtrevc, dvout, second
+      external   dcopy, dlacpy, dlahqr, dtrevc, dvout, arscnd
 c
 c     %--------------------%
 c     | External Functions |
@@ -170,7 +170,7 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 #ifdef DEBUG_STAT
-      call second (t0)
+      call arscnd (t0)
       msglvl = mneigh
 c 
       if (msglvl .gt. 2) then
@@ -187,8 +187,12 @@ c     | and the last components of the Schur vectors in BOUNDS.   |
 c     %-----------------------------------------------------------%
 c
       call dlacpy ('All', n, n, h, ldh, workl, n)
-      call dlaqrb (.true., n, 1, n, workl, n, ritzr, ritzi, bounds,
-     &             ierr)
+      do 5 j = 1, n-1
+          bounds(j) = zero
+   5  continue
+      bounds(n) = 1
+      call dlahqr(.true., .true., n, 1, n, workl, n, ritzr, ritzi, 1, 1,
+     &            bounds, 1, ierr)
       if (ierr .ne. 0) go to 9000
 #ifdef DEBUG_STAT
       if (msglvl .gt. 1) then
@@ -301,7 +305,7 @@ c
      &              '_neigh: Ritz estimates for the eigenvalues of H')
       end if
 c
-      call second (t1)
+      call arscnd (t1)
       tneigh = tneigh + (t1 - t0)
 #endif
  9000 continue

@@ -38,7 +38,7 @@ c\Local variables:
 c     xxxxxx  real
 c
 c\Routines called:
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     slamch  LAPACK routine that determines machine constants.
 c     slapy2  LAPACK routine to compute sqrt(x**2+y**2) carefully.
 c
@@ -119,7 +119,7 @@ c     |                                                             |
 c     | for some appropriate choice of norm.                        |
 c     %-------------------------------------------------------------%
 #ifdef DEBUG_STAT
-      call second (t0)
+      call arscnd (t0)
 #endif
 c     %---------------------------------%
 c     | Get machine dependent constant. |
@@ -134,8 +134,8 @@ c
          if (bounds(i) .le. tol*temp)   nconv = nconv + 1
    20 continue
 #ifdef DEBUG_STAT
-c      call second (t1)
-c      tnconv = tnconv + (t1 - t0)
+      call arscnd (t1)
+      tnconv = tnconv + (t1 - t0)
 #endif
       return
 c

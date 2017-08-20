@@ -93,7 +93,7 @@ c     Restarted Arnoldi Iteration", Rice University Technical Report
 c     TR95-13, Department of Computational and Applied Mathematics.
 c
 c\Routines called:
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     svout   ARPACK utility routine for vector output.
 c     slarnv  LAPACK routine for generating a random vector.
 c     sgemv   Level 2 BLAS routine for matrix vector multiplication.
@@ -167,7 +167,7 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   slarnv, svout, scopy, sgemv, second
+      external   slarnv, svout, scopy, sgemv, arscnd
 c
 c     %--------------------%
 c     | External Functions |
@@ -214,7 +214,7 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 #ifdef DEBUG_STAT
-         call second (t0)
+         call arscnd (t0)
          msglvl = mgetv0
 #endif
          ierr   = 0
@@ -241,7 +241,7 @@ c        | Force the starting vector into the range of OP to handle |
 c        | the generalized problem when B is possibly (singular).   |
 c        %----------------------------------------------------------%
 #ifdef DEBUG_STAT
-         call second (t2)
+         call arscnd (t2)
 #endif
          if (bmat .eq. 'G') then
 #ifdef DEBUG_STAT
@@ -268,7 +268,7 @@ c
       if (orth)  go to 40
 #ifdef DEBUG_STAT
       if (bmat .eq. 'G') then
-         call second (t3)
+         call arscnd (t3)
          tmvopx = tmvopx + (t3 - t2)
       end if
 #endif
@@ -277,7 +277,7 @@ c     | Starting vector is now in the range of OP; r = OP*r; |
 c     | Compute B-norm of starting vector.                   |
 c     %------------------------------------------------------%
 #ifdef DEBUG_STAT
-      call second (t2)
+      call arscnd (t2)
 #endif
       first = .TRUE.
       if (bmat .eq. 'G') then
@@ -296,7 +296,7 @@ c
    20 continue
 #ifdef DEBUG_STAT
       if (bmat .eq. 'G') then
-         call second (t3)
+         call arscnd (t3)
          tmvbx = tmvbx + (t3 - t2)
       end if
 #endif
@@ -339,7 +339,7 @@ c     %----------------------------------------------------------%
 c     | Compute the B-norm of the orthogonalized starting vector |
 c     %----------------------------------------------------------%
 #ifdef DEBUG_STAT
-      call second (t2)
+      call arscnd (t2)
 #endif
       if (bmat .eq. 'G') then
 #ifdef DEBUG_STAT
@@ -357,7 +357,7 @@ c
    40 continue
 #ifdef DEBUG_STAT
       if (bmat .eq. 'G') then
-         call second (t3)
+         call arscnd (t3)
          tmvbx = tmvbx + (t3 - t2)
       end if
 #endif
@@ -416,7 +416,7 @@ c
 #endif
       ido = 99
 #ifdef DEBUG_STAT
-      call second (t1)
+      call arscnd (t1)
       tgetv0 = tgetv0 + (t1 - t0)
 #endif
  9000 continue

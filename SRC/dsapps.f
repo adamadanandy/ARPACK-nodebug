@@ -91,7 +91,7 @@ c     TR95-13, Department of Computational and Applied Mathematics.
 c
 c\Routines called:
 c     ivout   ARPACK utility routine that prints integers. 
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     dvout   ARPACK utility routine that prints vectors.
 c     dlamch  LAPACK routine that determines machine constants.
 c     dlartg  LAPACK Givens rotation construction routine.
@@ -176,7 +176,7 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   daxpy, dcopy, dscal, dlacpy, dlartg, dlaset, dvout, 
-     &           ivout, second, dgemv
+     &           ivout, arscnd, dgemv
 c
 c     %--------------------%
 c     | External Functions |
@@ -213,7 +213,7 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 #ifdef DEBUG_STAT
-      call second (t0)
+      call arscnd (t0)
       msglvl = msapps
 #endif
       kplusp = kev + np 
@@ -265,7 +265,7 @@ c
                   call ivout (logfil, 1, i, ndigit, 
      &                 '_sapps: deflation at row/column no.')
                   call ivout (logfil, 1, jj, ndigit, 
-     &                 '_sapps: occured before shift number.')
+     &                 '_sapps: occurred before shift number.')
                   call dvout (logfil, 1, h(i+1,1), ndigit, 
      &                 '_sapps: the corresponding off diagonal element')
                end if
@@ -471,8 +471,10 @@ c
 c     %-------------------------------------------------%
 c     |  Move v(:,kplusp-kev+1:kplusp) into v(:,1:kev). |
 c     %-------------------------------------------------%
-c
-      call dlacpy ('All', n, kev, v(1,np+1), ldv, v, ldv)
+c     Resolve ARPACK issues with Intel MKL 11.0 Update 3
+      do 140 i = 1, kev
+         call dcopy (n, v(1,np+i), 1, v(1,i), 1)
+  140 continue
 c 
 c     %--------------------------------------------%
 c     | Copy the (kev+1)-st column of (V*Q) in the |
@@ -507,7 +509,7 @@ c
          end if
       end if
 c
-      call second (t1)
+      call arscnd (t1)
       tsapps = tsapps + (t1 - t0)
 #endif
  9000 continue 

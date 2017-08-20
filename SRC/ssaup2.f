@@ -48,7 +48,7 @@ c
 c  H       Real (NEV+NP) by 2 array.  (OUTPUT)
 c          H is used to store the generated symmetric tridiagonal matrix
 c          The subdiagonal is stored in the first column of H starting 
-c          at H(2,1).  The main diagonal is stored in the second column
+c          at H(2,1).  The main diagonal is stored in the arscnd column
 c          of H starting at H(1,2). If ssaup2 converges store the 
 c          B-norm of the final residual vector in H(1,1).
 c
@@ -148,7 +148,7 @@ c     sseigt  ARPACK compute Ritz values and error bounds routine.
 c     ssgets  ARPACK reorder Ritz values and error bounds routine.
 c     ssortr  ARPACK sorting routine.
 c     ivout   ARPACK utility routine that prints integers.
-c     second  ARPACK utility routine for timing.
+c     arscnd  ARPACK utility routine for timing.
 c     svout   ARPACK utility routine that prints vectors.
 c     slamch  LAPACK routine that determines machine constants.
 c     scopy   Level 1 BLAS that copies one vector to another.
@@ -235,7 +235,7 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   scopy, sgetv0, ssaitr, sscal, ssconv, sseigt, ssgets, 
-     &           ssapps, ssortr, svout, ivout, second, sswap
+     &           ssapps, ssortr, svout, ivout, arscnd, sswap
 c
 c     %--------------------%
 c     | External Functions |
@@ -262,7 +262,7 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 #ifdef DEBUG_STAT
-         call second (t0)
+         call arscnd (t0)
          msglvl = msaup2
 #endif
 c        %---------------------------------%
@@ -771,7 +771,7 @@ c        %---------------------------------------------%
 c
          cnorm = .true.
 #ifdef DEBUG_STAT
-         call second (t2)
+         call arscnd (t2)
 #endif
          if (bmat .eq. 'G') then
 #ifdef DEBUG_STAT
@@ -799,7 +799,7 @@ c        | WORKD(1:N) := B*RESID            |
 c        %----------------------------------%
 #ifdef DEBUG_STAT
          if (bmat .eq. 'G') then
-            call second (t3)
+            call arscnd (t3)
             tmvbx = tmvbx + (t3 - t2)
          end if
 #endif
@@ -841,7 +841,7 @@ c     %------------%
 c     | Error exit |
 c     %------------%
 #ifdef DEBUG_STAT
-      call second (t1)
+      call arscnd (t1)
       tsaup2 = t1 - t0
 #endif
  9000 continue

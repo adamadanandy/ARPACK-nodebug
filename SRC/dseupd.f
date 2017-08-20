@@ -503,7 +503,7 @@ c
      &          workl(ibd+jj-1) .le. tol*temp1) then
                select(jj) = .true.
                numcnv = numcnv + 1
-               if (jj .gt. nev) reord = .true.
+               if (jj .gt. nconv) reord = .true.
             endif
    11    continue
 c
@@ -611,9 +611,9 @@ c
 c
             if (leftptr .lt. rghtptr) go to 20
 c
- 30      end if
+ 30       end if
 #ifdef DEBUG_STAT
-         if (msglvl .gt. 2) then
+          if (msglvl .gt. 2) then
              call dvout  (logfil, ncv, workl(ihd), ndigit,
      &       '_seupd: The eigenvalues of H--reordered')
          end if
@@ -659,13 +659,13 @@ c
 c        %-------------------------------------------------------------%
 c        | *  Make a copy of all the Ritz values.                      |
 c        | *  Transform the Ritz values back to the original system.   |
-c        |    For TYPE = 2 the transformation is                |
+c        |    For TYPE = 2 the transformation is                       |
 c        |             lambda = 1/theta + sigma                        |
-c        |    For TYPE = 5 the transformation is                |
+c        |    For TYPE = 5 the transformation is                       |
 c        |             lambda = sigma * theta / ( theta - 1 )          |
-c        |    For TYPE = 6 the transformation is                |
+c        |    For TYPE = 6 the transformation is                       |
 c        |             lambda = sigma * (theta + 1) / (theta - 1 )     |
-c        |    where the theta are the Ritz values returned by dsaupd .  |
+c        |    where the theta are the Ritz values returned by dsaupd . |
 c        | NOTES:                                                      |
 c        | *The Ritz vectors are not affected by the transformation.   |
 c        |  They are only reordered.                                   |
@@ -762,6 +762,16 @@ c
      &                ldq   , workl(iw+ncv), workl(ihb),
      &                ncv   , temp         , ierr)
 c
+c        %-----------------------------------------------------%
+c        | Make a copy of the last row into                    |
+c        | workl(iw+ncv:iw+2*ncv), as it is needed again in    |
+c        | the Ritz vector purification step below             |
+c        %-----------------------------------------------------%
+c
+         do 67 j = 1, nconv
+            workl(iw+ncv+j-1) = workl(ihb+j-1)
+ 67      continue
+
       else if (rvec .and. howmny .eq. 'S') then
 c
 c     Not yet implemented. See remark 2 above.
@@ -832,20 +842,20 @@ c
       if (rvec .and. (type .eq. 2 .or. type .eq. 6)) then
 c
          do 110 k=0, nconv-1
-            workl(iw+k) = workl(iq+k*ldq+ncv-1)
+            workl(iw+k) = workl(iw+ncv+k)
      &                  / workl(iw+k)
  110     continue
 c
       else if (rvec .and. type .eq. 5) then
 c
          do 120 k=0, nconv-1
-            workl(iw+k) = workl(iq+k*ldq+ncv-1)
+            workl(iw+k) = workl(iw+ncv+k)
      &                  / (workl(iw+k)-one)
  120     continue
 c
       end if 
 c
-      if (type .ne. 1)
+      if (rvec .and. type .ne. 1)
      &   call dger  (n, nconv, one, resid, 1, workl(iw), 1, z, ldz)
 c
  9000 continue

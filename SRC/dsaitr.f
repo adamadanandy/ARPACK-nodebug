@@ -88,7 +88,7 @@ c
 c  H       Double precision (K+NP) by 2 array.  (INPUT/OUTPUT)
 c          H is used to store the generated symmetric tridiagonal matrix
 c          with the subdiagonal in the first column starting at H(2,1)
-c          and the main diagonal in the second column.
+c          and the main diagonal in the arscnd column.
 c
 c  LDH     Integer.  (INPUT)
 c          Leading dimension of H exactly as declared in the calling 
@@ -262,7 +262,7 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   daxpy, dcopy, dscal, dgemv, dgetv0, dvout, dmout,
-     &           dlascl, ivout, second
+     &           dlascl, ivout, arscnd
 c
 c     %--------------------%
 c     | External Functions |
@@ -300,7 +300,7 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 #ifdef DEBUG_STAT
-         call second (t0)
+         call arscnd (t0)
          msglvl = msaitr
 #endif
 c        %------------------------------%
@@ -422,7 +422,7 @@ c              %------------------------------------------------%
 c
                info = j - 1
 #ifdef DEBUG_STAT
-               call second (t1)
+               call arscnd (t1)
                tsaitr = tsaitr + (t1 - t0)
 #endif
                ido = 99
@@ -464,7 +464,7 @@ c
          step3 = .true.
 #ifdef DEBUG_STAT
          nopx  = nopx + 1
-         call second (t2)
+         call arscnd (t2)
 #endif
          call dcopy (n, v(1,j), 1, workd(ivj), 1)
          ipntr(1) = ivj
@@ -484,7 +484,7 @@ c        | Back from reverse communication;  |
 c        | WORKD(IRJ:IRJ+N-1) := OP*v_{j}.   |
 c        %-----------------------------------%
 #ifdef DEBUG_STAT
-         call second (t3)
+         call arscnd (t3)
          tmvopx = tmvopx + (t3 - t2)
 #endif
          step3 = .false.
@@ -506,7 +506,7 @@ c        %-------------------------------------------%
 c
          if (mode .eq. 2) go to 65
 #ifdef DEBUG_STAT
-         call second (t2)
+         call arscnd (t2)
 #endif
          if (bmat .eq. 'G') then
 #ifdef DEBUG_STAT
@@ -533,7 +533,7 @@ c        | WORKD(IPJ:IPJ+N-1) := B*OP*v_{j}. |
 c        %-----------------------------------%
 #ifdef DEBUG_STAT
          if (bmat .eq. 'G') then
-            call second (t3)
+            call arscnd (t3)
             tmvbx = tmvbx + (t3 - t2)
          end if 
 #endif
@@ -602,12 +602,12 @@ c
             h(j,1) = rnorm
          end if
 #ifdef DEBUG_STAT
-         call second (t4)
+         call arscnd (t4)
 #endif
          orth1 = .true.
          iter  = 0
 #ifdef DEBUG_STAT
-         call second (t2)
+         call arscnd (t2)
 #endif
          if (bmat .eq. 'G') then
 #ifdef DEBUG_STAT
@@ -634,7 +634,7 @@ c        | WORKD(IPJ:IPJ+N-1) := B*r_{j}.                    |
 c        %---------------------------------------------------%
 #ifdef DEBUG_STAT
          if (bmat .eq. 'G') then
-            call second (t3)
+            call arscnd (t3)
             tmvbx = tmvbx + (t3 - t2)
          end if
 #endif 
@@ -710,7 +710,7 @@ c
 c 
          orth2 = .true.
 #ifdef DEBUG_STAT
-         call second (t2)
+         call arscnd (t2)
 #endif
          if (bmat .eq. 'G') then
 #ifdef DEBUG_STAT
@@ -737,7 +737,7 @@ c        | Back from reverse communication if ORTH2 = .true. |
 c        %---------------------------------------------------%
 #ifdef DEBUG_STAT
          if (bmat .eq. 'G') then
-            call second (t3)
+            call arscnd (t3)
             tmvbx = tmvbx + (t3 - t2)
          end if
 #endif
@@ -810,7 +810,7 @@ c
          rstart = .false.
          orth2  = .false.
 #ifdef DEBUG_STAT
-         call second (t5)
+         call arscnd (t5)
          titref = titref + (t5 - t4)
 #endif
 c        %----------------------------------------------------------%
@@ -835,7 +835,7 @@ c
          j = j + 1
          if (j .gt. k+np) then
 #ifdef DEBUG_STAT
-            call second (t1)
+            call arscnd (t1)
             tsaitr = tsaitr + (t1 - t0)
 #endif
             ido = 99
